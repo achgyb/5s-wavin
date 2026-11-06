@@ -38,7 +38,8 @@ export const GOOGLE_CONFIG = {
   SCOPES: [
     'openid',
     'email',
-    'profile'
+    'profile',
+    'https://www.googleapis.com/auth/drive.file'
   ].join(' '),
 
   // ── Sheet tab names (must match your Google Spreadsheet tab names) ────────

@@ -79,13 +79,7 @@ function _setupTokenClient(resolve, reject) {
   try {
     _tokenClient = window.google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CONFIG.CLIENT_ID,
-      // Note: We only request identity scopes now. The Apps Script backend
-      // handles the spreadsheet authorization as the admin.
-      scope: [
-        'openid',
-        'email',
-        'profile',
-      ].join(' '),
+      scope: GOOGLE_CONFIG.SCOPES,
       callback: _handleTokenResponse,
       error_callback: (gisError) => {
         // GIS error_callback receives an object like { type: 'popup_closed_by_user' }
