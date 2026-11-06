@@ -38,7 +38,7 @@ function doPost(e) {
     var rawBody = e.postData ? e.postData.contents : "{}";
     var payload = JSON.parse(rawBody);
     var action = payload.action;
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var ss = getSpreadsheet(payload);
 
     // ── 1. Upload Photo ke Google Drive ─────────────────────────────────────
     if (action === "uploadPhoto") {
@@ -73,6 +73,14 @@ function doPost(e) {
           thumbnailUrl: viewUrl,
           webViewLink: file.getUrl()
         }
+      });
+    }
+
+    // Validasi ketersediaan Spreadsheet untuk operasi database (read/append/update/delete)
+    if (!ss) {
+      return respondJSON({
+        success: false,
+        error: "Spreadsheet tidak terhubung! Pastikan script ini dibuka dari Ekstensi -> Apps Script di dalam Google Sheets, atau kirim spreadsheetId."
       });
     }
 
@@ -226,4 +234,22 @@ function respondJSON(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }
+
+function getSpreadsheet(payload) {
+  try {
+    var active = SpreadsheetApp.getActiveSpreadsheet();
+    if (active) return active;
+  } catch (e) {}
+
+  var id = (payload && payload.spreadsheetId) || "";
+  if (id) {
+    try {
+      return SpreadsheetApp.openById(id);
+    } catch (err) {
+      throw new Error("Gagal membuka Spreadsheet ID: " + id + " - " + err.message);
+    }
+  }
+  return null;
+}
+
 

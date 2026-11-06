@@ -18,7 +18,10 @@ async function fetchGAS(payload) {
     method: 'POST',
     // Do NOT set Content-Type to application/json for GAS web apps to avoid preflight issues 
     // when simple requests are preferred, though our GAS handles OPTIONS anyway.
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      spreadsheetId: GOOGLE_CONFIG.SPREADSHEET_ID,
+      ...payload,
+    }),
   });
   
   if (!res.ok) throw new Error(`Backend error: ${res.statusText}`);
