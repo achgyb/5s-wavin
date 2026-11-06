@@ -55,9 +55,7 @@ export const GOOGLE_CONFIG = {
   },
 };
 
-/** Check if Google config has been filled in */
+/** Check if Google backend is configured */
 export const isGoogleConfigured = () =>
-  !!GOOGLE_CONFIG.CLIENT_ID &&
-  !!GOOGLE_CONFIG.SPREADSHEET_ID &&
   !!GOOGLE_CONFIG.APPS_SCRIPT_URL;
 

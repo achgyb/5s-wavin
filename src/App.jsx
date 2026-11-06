@@ -67,53 +67,74 @@ const MOCK_SCHEDULES = [
   { id: 'SCH-1005', zone: 'PLANT 04 - ZONE B', auditor: 'S. CHEN', date: '2026-07-01', status: 'OVERDUE' }
 ];
 
-// Pre-seeded approved users (built-in legacy PIN accounts + pre-approved Google manager accounts)
+// Pre-seeded approved users (Username + Password accounts)
 const DEFAULT_APPROVED_USERS = [
   {
-    id: 'user-google-dicky',
-    name: 'DICKY SETYAWAN',
-    email: 'dicky.setyawan@gmail.com',
+    id: 'user-admin',
+    name: 'ADMIN FACTORY',
+    username: 'admin',
+    password: 'admin123',
     role: 'MANAGER',
-    authType: 'GOOGLE',
+    authType: 'CREDENTIAL',
     approvedAt: '2026-01-01',
-    avatar: 'DS',
-    avatarColor: '#1a73e8',
-    companyEmail: 'dicky.setyawan@gmail.com',
+    avatar: 'AF',
+    avatarColor: '#353750',
+    companyEmail: 'admin.factory@gmail.com',
+    department: 'MANAGEMENT'
+  },
+  {
+    id: 'user-operator',
+    name: 'OPERATOR 1',
+    username: 'operator',
+    password: 'operator123',
+    role: 'OPERATOR',
+    authType: 'CREDENTIAL',
+    approvedAt: '2026-01-01',
+    avatar: 'OP',
+    avatarColor: '#3DAA72',
+    companyEmail: 'operator1@gmail.com',
     department: 'PRODUCTION'
   },
   {
-    id: 'user-google-admin',
-    name: 'ADMIN FACTORY',
-    email: 'admin.factory@gmail.com',
+    id: 'user-pin-manager',
+    name: 'S. CHEN',
+    username: 'schen',
+    password: 'manager123',
+    pin: '310794',
     role: 'MANAGER',
-    authType: 'GOOGLE',
+    authType: 'CREDENTIAL',
     approvedAt: '2026-01-01',
-    avatar: 'AF',
-    avatarColor: '#34a853',
-    companyEmail: 'admin.factory@gmail.com',
+    avatar: 'SC',
+    avatarColor: '#E8472A',
+    companyEmail: 'schen@wavin.com',
     department: 'PRODUCTION'
   },
   {
     id: 'user-pin-operator',
     name: 'J. MILLER',
-    email: null,
-    role: 'OPERATOR',
-    authType: 'PIN',
+    username: 'jmiller',
+    password: 'operator123',
     pin: '1111',
+    role: 'OPERATOR',
+    authType: 'CREDENTIAL',
     approvedAt: '2026-01-01',
     avatar: 'JM',
-    avatarColor: '#E8472A',
+    avatarColor: '#29A9E0',
+    companyEmail: 'jmiller@wavin.com',
+    department: 'ASSEMBLY'
   },
   {
-    id: 'user-pin-manager',
-    name: 'S. CHEN',
-    email: null,
+    id: 'user-google-dicky',
+    name: 'DICKY SETYAWAN',
+    username: 'dicky',
+    password: 'dicky123',
     role: 'MANAGER',
-    authType: 'PIN',
-    pin: '310794',
+    authType: 'CREDENTIAL',
     approvedAt: '2026-01-01',
-    avatar: 'SC',
-    avatarColor: '#E8472A',
+    avatar: 'DS',
+    avatarColor: '#1a73e8',
+    companyEmail: 'dicky.setyawan@gmail.com',
+    department: 'PRODUCTION'
   },
 ];
 
@@ -133,39 +154,31 @@ function App() {
   const [googleReady, setGoogleReady] = useState(false);
   const [googleTokenActive, setGoogleTokenActive] = useState(false);
 
-  // Auto-update default PINs in case user has old ones cached in localStorage
+  // Auto-update default credentials in case user has old ones cached in localStorage
   useEffect(() => {
-    setApprovedUsers(prev => prev.map(user => {
-      const defaultMatch = DEFAULT_APPROVED_USERS.find(d => d.id === user.id);
-      if (defaultMatch && user.pin !== defaultMatch.pin) {
-        return { ...user, pin: defaultMatch.pin };
-      }
-      return user;
-    }));
+    setApprovedUsers(prev => {
+      const existingUsernames = new Set(prev.map(u => (u.username || '').toLowerCase()));
+      const missingDefaults = DEFAULT_APPROVED_USERS.filter(d => !existingUsernames.has(d.username.toLowerCase()));
+      const updated = prev.map(user => {
+        const match = DEFAULT_APPROVED_USERS.find(d => d.id === user.id || (d.username && d.username.toLowerCase() === (user.username || '').toLowerCase()));
+        if (match) {
+          return {
+            ...match,
+            ...user,
+            username: user.username || match.username,
+            password: user.password || match.password,
+          };
+        }
+        return user;
+      });
+      return [...updated, ...missingDefaults];
+    });
   }, []);
 
+  // Fetch all data from Google Sheets when backend is configured
   useEffect(() => {
     if (isGoogleConfigured()) {
-      initGoogleAuth()
-        .then(() => {
-          setGoogleReady(true);
-          // Set initial token active state if already signed in
-          setGoogleTokenActive(isSignedIn());
-        })
-        .catch(err => console.warn('Google Auth init failed (configure src/config/google.js):', err));
-    }
-  }, []);
-
-  // Sync token state on login / view changes
-  useEffect(() => {
-    if (googleReady) {
-      setGoogleTokenActive(isSignedIn());
-    }
-  }, [googleReady, currentUser, currentView]);
-
-  // Fetch all data from Google Sheets when a valid Google token is active
-  useEffect(() => {
-    if (googleReady && googleTokenActive) {
+      setGoogleReady(true);
       const loadSheetsDatabase = async () => {
         try {
           // 1. Initialize headers on empty tabs
@@ -224,7 +237,7 @@ function App() {
       };
       loadSheetsDatabase();
     }
-  }, [googleReady, googleTokenActive]);
+  }, []);
 
   // ─── Access Control State ───────────────────────────────────────────────────
   const [pendingUsers, setPendingUsers] = useState(() =>
@@ -277,7 +290,7 @@ function App() {
 
   const handleCreateZone = async (newZone) => {
     setZones(prev => [...prev, newZone]);
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.zones.add(newZone);
       } catch (err) {
@@ -288,7 +301,7 @@ function App() {
 
   const handleDeleteZone = async (zoneId) => {
     setZones(prev => prev.filter(z => z.id !== zoneId));
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.zones.delete(zoneId);
       } catch (err) {
@@ -299,7 +312,7 @@ function App() {
 
   const handleCreateDepartment = async (newDept) => {
     setDepartments(prev => [...prev, newDept]);
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.departments.add(newDept);
       } catch (err) {
@@ -310,7 +323,7 @@ function App() {
 
   const handleDeleteDepartment = async (deptId) => {
     setDepartments(prev => prev.filter(d => d.id !== deptId));
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.departments.delete(deptId);
       } catch (err) {
@@ -432,7 +445,7 @@ function App() {
     setApprovedUsers((prev) => [approvedUser, ...prev]);
     setPendingUsers((prev) => prev.filter((u) => u.id !== pendingId));
 
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await Promise.all([
           sheetsDB.usersApproved.add(approvedUser),
@@ -450,7 +463,7 @@ function App() {
       prev.map((u) => (u.id === pendingId ? { ...u, status: 'REJECTED' } : u))
     );
 
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.usersPending.updateStatus(pendingId, 'REJECTED');
       } catch (err) {
@@ -463,7 +476,7 @@ function App() {
   const handleRemovePendingUser = async (pendingId) => {
     setPendingUsers((prev) => prev.filter((u) => u.id !== pendingId));
 
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.usersPending.delete(pendingId);
       } catch (err) {
@@ -498,11 +511,24 @@ function App() {
   const handleRevokeUser = async (userId) => {
     setApprovedUsers((prev) => prev.filter((u) => u.id !== userId));
 
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.usersApproved.delete(userId);
       } catch (err) {
         console.error('Failed to revoke approved user from Sheets:', err);
+      }
+    }
+  };
+
+  /** Create a new approved user (Username + Password) */
+  const handleCreateUser = async (newUser) => {
+    setApprovedUsers((prev) => [newUser, ...prev]);
+
+    if (isGoogleConfigured()) {
+      try {
+        await sheetsDB.usersApproved.add(newUser);
+      } catch (err) {
+        console.error('Failed to save new user to Sheets:', err);
       }
     }
   };
@@ -538,7 +564,7 @@ function App() {
     );
 
     // Persist to Google Sheets so the database remembers it across sessions
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.usersApproved.update(pendingLoginUser.id, { companyEmail, department });
       } catch (err) {
@@ -585,7 +611,7 @@ function App() {
     setAudits(prev => [newAudit, ...prev]);
 
     // Save to Google Sheets if ready
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.audits.add({
           id: newAudit.id,
@@ -607,7 +633,7 @@ function App() {
       const findingsWithAuditId = newFindings.map(f => ({ ...f, auditId: newAudit.id }));
       setActionItems(prev => [...findingsWithAuditId, ...prev]);
 
-      if (googleReady && isGoogleConfigured()) {
+      if (isGoogleConfigured()) {
         findingsWithAuditId.forEach(async (finding) => {
           try {
             await sheetsDB.actionItems.add(finding);
@@ -636,7 +662,7 @@ function App() {
           };
           setRedTags(prev => [newRedTag, ...prev]);
 
-          if (googleReady && isGoogleConfigured()) {
+          if (isGoogleConfigured()) {
             try {
               await sheetsDB.redTags.add(newRedTag);
             } catch (err) {
@@ -652,7 +678,7 @@ function App() {
         const isMatched = s.zone.toUpperCase().includes(auditData.zone.toUpperCase()) && s.status !== 'COMPLETED';
         if (isMatched) {
           const updated = { ...s, status: 'COMPLETED' };
-          if (googleReady && isGoogleConfigured()) {
+          if (isGoogleConfigured()) {
             sheetsDB.schedules.updateStatus(s.id, 'COMPLETED').catch(err =>
               console.error('Failed to update schedule status in Sheets:', err)
             );
@@ -671,7 +697,7 @@ function App() {
   const handleSubmitRedTag = async (redTagData) => {
     setRedTags(prev => [redTagData, ...prev]);
 
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.redTags.add(redTagData);
       } catch (err) {
@@ -692,7 +718,7 @@ function App() {
     };
     setActionItems(prev => [newAction, ...prev]);
 
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.actionItems.add(newAction);
       } catch (err) {
@@ -718,7 +744,7 @@ function App() {
                 const isMatch = item.title.includes(tag.id) || tag.description.includes(item.title.split(' ')[0]);
                 if (isMatch) {
                   const resolvedTag = { ...tag, status: 'Resolved' };
-                  if (googleReady && isGoogleConfigured()) {
+                  if (isGoogleConfigured()) {
                     sheetsDB.redTags.resolve(tag.id).catch(err =>
                       console.error('Failed to resolve red tag in Sheets:', err)
                     );
@@ -735,7 +761,7 @@ function App() {
       })
     );
 
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.actionItems.updateStatus(itemId, nextStatus);
       } catch (err) {
@@ -746,7 +772,7 @@ function App() {
 
   const handleCreateActionItem = async (item) => {
     setActionItems(prev => [item, ...prev]);
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.actionItems.add(item);
       } catch (err) {
@@ -757,7 +783,7 @@ function App() {
 
   const handleCreateSchedule = async (scheduleItem) => {
     setSchedules(prev => [scheduleItem, ...prev]);
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.schedules.add(scheduleItem);
       } catch (err) {
@@ -795,7 +821,7 @@ function App() {
     setRedTags(prev =>
       prev.map(tag => tag.id === tagId ? { ...tag, status: 'Resolved' } : tag)
     );
-    if (googleReady && isGoogleConfigured()) {
+    if (isGoogleConfigured()) {
       try {
         await sheetsDB.redTags.resolve(tagId);
       } catch (err) {
@@ -821,15 +847,13 @@ function App() {
       currentUser={currentUser}
       onLogout={handleLogout}
       pendingCount={activePendingCount}
-      isGoogleSynced={googleReady && googleTokenActive}
+      isGoogleSynced={isGoogleConfigured()}
       isGoogleConfigured={isGoogleConfigured()}
-      onConnectGoogle={handleConnectGoogle}
+      onConnectGoogle={() => alert(isGoogleConfigured() ? 'Database Google Sheets & Drive terhubung.' : 'Konfigurasikan VITE_APPS_SCRIPT_URL di Vercel untuk menghubungkan database.')}
     >
       {currentView === 'LOGIN' && (
         <Login
           onLogin={handleLogin}
-          onGoogleSignUp={handleGoogleSignUp}
-          onGoogleLogin={handleGoogleLogin}
           approvedUsers={approvedUsers}
         />
       )}
@@ -900,6 +924,7 @@ function App() {
           onRefreshPendingUsers={handleRefreshPendingUsers}
           isGoogleConfigured={isGoogleConfigured()}
           currentUser={currentUser}
+          onCreateUser={handleCreateUser}
         />
       )}
     </Layout>

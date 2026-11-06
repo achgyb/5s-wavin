@@ -18,6 +18,7 @@ export default function AdminPanel({
   onRefreshPendingUsers,
   isGoogleConfigured = false,
   currentUser,
+  onCreateUser,
 }) {
   const [zoneName, setZoneName] = useState('');
   const [zoneDesc, setZoneDesc] = useState('');
@@ -27,6 +28,52 @@ export default function AdminPanel({
   const [activeTab, setActiveTab] = useState('requests');
   const [confirmModal, setConfirmModal] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // New User Form State
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [newUserName, setNewUserName] = useState('');
+  const [newUserUsername, setNewUserUsername] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserRole, setNewUserRole] = useState('OPERATOR');
+  const [newUserDept, setNewUserDept] = useState('');
+
+  const handleCreateNewUser = (e) => {
+    e.preventDefault();
+    if (!newUserName.trim() || !newUserUsername.trim() || !newUserPassword.trim()) {
+      alert('Mohon isi Nama, Username, dan Password.');
+      return;
+    }
+    const cleanUsername = newUserUsername.trim().toLowerCase();
+    if (approvedUsers.some(u => (u.username || '').toLowerCase() === cleanUsername)) {
+      alert('Username ini sudah terdaftar. Silakan pilih username lain.');
+      return;
+    }
+    const initials = newUserName.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    const colors = ['#1a73e8', '#34a853', '#ea4335', '#fbbc04', '#4285f4', '#353750', '#F05731'];
+    const avatarColor = colors[cleanUsername.charCodeAt(0) % colors.length];
+
+    const newUserObj = {
+      id: `user-manual-${Date.now()}`,
+      name: newUserName.trim().toUpperCase(),
+      username: cleanUsername,
+      password: newUserPassword.trim(),
+      role: newUserRole,
+      authType: 'CREDENTIAL',
+      approvedAt: new Date().toISOString(),
+      avatar: initials || 'US',
+      avatarColor,
+      companyEmail: '',
+      department: newUserDept || (departments[0]?.name || 'PRODUCTION'),
+    };
+
+    if (onCreateUser) {
+      onCreateUser(newUserObj);
+    }
+    setNewUserName('');
+    setNewUserUsername('');
+    setNewUserPassword('');
+    setShowAddUser(false);
+  };
 
   const activePending = pendingUsers.filter((u) => u.status === 'PENDING');
   const rejectedPending = pendingUsers.filter((u) => u.status === 'REJECTED');
@@ -287,15 +334,84 @@ export default function AdminPanel({
       {/* ── Tab: Approved Users ───────────────────────────────────────────── */}
       {activeTab === 'users' && (
         <div className="bg-white border border-[#E0E0EC] rounded-xl shadow-sm overflow-hidden">
-          <div className="p-4 border-b border-[#E0E0EC] flex items-center justify-between">
+          <div className="p-4 border-b border-[#E0E0EC] flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[#353750] text-xl">group</span>
               <h2 className="font-bold text-[#353750] uppercase text-sm tracking-wide">Approved Users</h2>
+              <span className="text-xs font-mono bg-[#F4F4F6] text-[#6B6E8A] px-2.5 py-0.5 rounded-full border border-[#E0E0EC] font-bold">
+                {approvedUsers.length} Total
+              </span>
             </div>
-            <span className="text-xs font-mono bg-[#F4F4F6] text-[#6B6E8A] px-3 py-1 rounded-full border border-[#E0E0EC] font-bold">
-              {approvedUsers.length} Total
-            </span>
+            <button
+              onClick={() => setShowAddUser(!showAddUser)}
+              className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5 shadow-sm transition-all"
+              style={{ background: '#353750' }}
+            >
+              <span className="material-symbols-outlined text-sm">{showAddUser ? 'close' : 'person_add'}</span>
+              {showAddUser ? 'Batal' : 'Tambah User'}
+            </button>
           </div>
+
+          {showAddUser && (
+            <form onSubmit={handleCreateNewUser} className="p-4 bg-[#F9F9FB] border-b border-[#E0E0EC] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+              <div>
+                <label className="text-[10px] font-bold uppercase text-[#6B6E8A] block mb-1">Nama Lengkap</label>
+                <input
+                  type="text"
+                  placeholder="Contoh: Budi Santoso"
+                  className="w-full px-3 py-2 border rounded-lg text-xs font-semibold border-[#D5D5E2] bg-white outline-none focus:border-[#353750]"
+                  value={newUserName}
+                  onChange={(e) => setNewUserName(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase text-[#6B6E8A] block mb-1">Username</label>
+                <input
+                  type="text"
+                  placeholder="budi123"
+                  className="w-full px-3 py-2 border rounded-lg text-xs font-semibold border-[#D5D5E2] bg-white outline-none focus:border-[#353750]"
+                  value={newUserUsername}
+                  onChange={(e) => setNewUserUsername(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase text-[#6B6E8A] block mb-1">Password</label>
+                <input
+                  type="text"
+                  placeholder="password123"
+                  className="w-full px-3 py-2 border rounded-lg text-xs font-semibold border-[#D5D5E2] bg-white outline-none focus:border-[#353750]"
+                  value={newUserPassword}
+                  onChange={(e) => setNewUserPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase text-[#6B6E8A] block mb-1">Role & Dept</label>
+                <div className="flex gap-1.5">
+                  <select
+                    className="flex-1 px-2 py-2 border rounded-lg text-xs font-bold border-[#D5D5E2] bg-white outline-none focus:border-[#353750]"
+                    value={newUserRole}
+                    onChange={(e) => setNewUserRole(e.target.value)}
+                  >
+                    <option value="OPERATOR">OPERATOR</option>
+                    <option value="MANAGER">MANAGER</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  className="w-full py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-white shadow-sm flex items-center justify-center gap-1 cursor-pointer"
+                  style={{ background: '#3DAA72' }}
+                >
+                  <span className="material-symbols-outlined text-sm">check</span>
+                  Simpan User
+                </button>
+              </div>
+            </form>
+          )}
           <div className="divide-y divide-[#F0F0F8] max-h-[500px] overflow-y-auto">
             {approvedUsers.map((user) => {
               const isSelf = user.id === currentUser?.id || (user.email && currentUser?.email && user.email.toLowerCase() === currentUser.email.toLowerCase());
@@ -327,7 +443,15 @@ export default function AdminPanel({
                       )}
                     </div>
                     <p className="text-xs text-[#6B6E8A] truncate mt-1">
-                      {user.companyEmail ? `Company: ${user.companyEmail}` : (user.email || 'PIN-based login')}
+                      {user.username ? (
+                        <span>
+                          <strong className="text-[#353750]">Username:</strong> {user.username} 
+                          <span className="mx-1.5 opacity-40">|</span> 
+                          <strong className="text-[#353750]">Password:</strong> {user.password || user.pin || '******'}
+                        </span>
+                      ) : (
+                        user.companyEmail ? `Company: ${user.companyEmail}` : (user.email || `PIN: ${user.pin || '****'}`)
+                      )}
                     </p>
                   </div>
                   
