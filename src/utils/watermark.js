@@ -132,3 +132,4 @@ export function getCurrentWeekInfo(date = new Date()) {
     label: `Minggu ${weekNo} (${monthName} ${year})`,
   };
 }
+

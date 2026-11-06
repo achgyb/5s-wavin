@@ -77,6 +77,9 @@ const SELF_ASSESSMENT_CRITERIA = [
   },
 ];
 
+// Batas maksimum foto per Self Assessment
+const MAX_PHOTOS = 5;
+
 export default function SelfAssessment({
   currentUser,
   selfAssessments = [],
@@ -133,6 +136,11 @@ export default function SelfAssessment({
 
   // ─── Kamera Live Viewfinder ───────────────────────────────────────────────
   const startLiveCamera = async () => {
+    if (capturedPhotos.length >= MAX_PHOTOS) {
+      alert(`Maksimal ${MAX_PHOTOS} foto bukti tercapai. Hapus salah satu foto terlebih dahulu jika ingin mengambil foto baru.`);
+      return;
+    }
+
     try {
       setShowCameraModal(true);
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -170,6 +178,12 @@ export default function SelfAssessment({
   // Jepret foto dari Live Camera
   const captureSnapshotFromCamera = async () => {
     if (!videoRef.current) return;
+    if (capturedPhotos.length >= MAX_PHOTOS) {
+      alert(`Maksimal ${MAX_PHOTOS} foto bukti telah tercapai.`);
+      stopLiveCamera();
+      return;
+    }
+
     setIsProcessingPhoto(true);
 
     try {
@@ -189,7 +203,10 @@ export default function SelfAssessment({
         aocName: activeAocName,
       });
 
-      setCapturedPhotos((prev) => [...prev, watermarked]);
+      setCapturedPhotos((prev) => {
+        if (prev.length >= MAX_PHOTOS) return prev;
+        return [...prev, watermarked];
+      });
       stopLiveCamera();
     } catch (err) {
       alert('Gagal mengambil foto: ' + err.message);
@@ -203,6 +220,12 @@ export default function SelfAssessment({
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (capturedPhotos.length >= MAX_PHOTOS) {
+      alert(`Maksimal ${MAX_PHOTOS} foto bukti tercapai. Hapus salah satu foto terlebih dahulu jika ingin mengambil foto baru.`);
+      if (e.target) e.target.value = '';
+      return;
+    }
+
     setIsProcessingPhoto(true);
     try {
       const watermarked = await addWatermarkToImage(file, {
@@ -210,7 +233,10 @@ export default function SelfAssessment({
         subArea: activeSubAreaObj?.name,
         aocName: activeAocName,
       });
-      setCapturedPhotos((prev) => [...prev, watermarked]);
+      setCapturedPhotos((prev) => {
+        if (prev.length >= MAX_PHOTOS) return prev;
+        return [...prev, watermarked];
+      });
     } catch (err) {
       alert('Gagal memproses watermark foto: ' + err.message);
     } finally {
@@ -229,6 +255,11 @@ export default function SelfAssessment({
 
     if (capturedPhotos.length === 0) {
       alert('WAJIB mengambil minimal 1 foto bukti kondisi area langsung dari kamera!');
+      return;
+    }
+
+    if (capturedPhotos.length > MAX_PHOTOS) {
+      alert(`Maksimal ${MAX_PHOTOS} foto bukti yang dapat di-upload per assessment.`);
       return;
     }
 
@@ -517,31 +548,56 @@ export default function SelfAssessment({
 
           {/* Card: Kamera Wajib & Watermark */}
           <div className="bg-white border-2 border-dashed border-[#F05731]/40 rounded-2xl p-6 shadow-sm bg-[#FFFDFD]">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-[#F0E0DC] pb-3 mb-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#F0E0DC] pb-3 mb-4">
               <div>
                 <h2 className="text-sm font-extrabold text-[#353750] uppercase tracking-wider flex items-center gap-2">
                   <span className="material-symbols-outlined text-[#F05731]">photo_camera</span>
-                  3. Pengambilan Foto Bukti Wajib (Kamera Langsung &amp; Watermark)
+                  3. Pengambilan Foto Bukti Wajib (Maksimal {MAX_PHOTOS} Foto)
                 </h2>
                 <p className="text-xs text-[#6B6E8A] mt-0.5 font-semibold">
-                  Foto <strong className="text-[#D32F2F]">wajib diambil langsung dari kamera</strong> (tidak bisa upload dari galeri) dan akan distempel watermark tanggal &amp; jam riil secara otomatis.
+                  Foto <strong className="text-[#D32F2F]">wajib diambil langsung dari kamera</strong> (tidak bisa upload dari galeri) dan akan distempel watermark tanggal &amp; jam riil secara otomatis. Maksimal {MAX_PHOTOS} foto per assessment.
                 </p>
               </div>
 
-              {/* Action Buttons to open camera */}
-              <div className="flex items-center gap-2 mt-2 md:mt-0">
-                <button
-                  type="button"
-                  onClick={startLiveCamera}
-                  disabled={isProcessingPhoto}
-                  className="px-4 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider text-white shadow-md flex items-center gap-2 transition-all cursor-pointer"
-                  style={{ background: '#F05731' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#D0401D')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = '#F05731')}
-                >
-                  <span className="material-symbols-outlined text-base">videocam</span>
-                  Buka Kamera Langsung
-                </button>
+              {/* Action Buttons & Counter */}
+              <div className="flex items-center gap-3 shrink-0">
+                <div className={`px-3 py-1.5 rounded-xl font-mono text-xs font-extrabold border flex items-center gap-1.5 ${
+                  capturedPhotos.length === MAX_PHOTOS
+                    ? 'bg-[#E8F5E9] text-[#2E7D32] border-[#2E7D32]/30'
+                    : capturedPhotos.length > 0
+                    ? 'bg-[#E3F2FD] text-[#1976D2] border-[#1976D2]/30'
+                    : 'bg-[#FFF3E0] text-[#E65100] border-[#E65100]/30'
+                }`}>
+                  <span className="material-symbols-outlined text-sm">
+                    {capturedPhotos.length === MAX_PHOTOS ? 'task_alt' : 'photo_library'}
+                  </span>
+                  <span>{capturedPhotos.length} / {MAX_PHOTOS} Foto</span>
+                  {capturedPhotos.length === MAX_PHOTOS && <span className="text-[10px] font-black uppercase">(Penuh)</span>}
+                </div>
+
+                {capturedPhotos.length >= MAX_PHOTOS ? (
+                  <button
+                    type="button"
+                    disabled
+                    className="px-4 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider text-white shadow-sm flex items-center gap-2 bg-gray-400 cursor-not-allowed opacity-80"
+                  >
+                    <span className="material-symbols-outlined text-base">check_circle</span>
+                    Maks 5 Foto Tercapai
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={startLiveCamera}
+                    disabled={isProcessingPhoto}
+                    className="px-4 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider text-white shadow-md flex items-center gap-2 transition-all cursor-pointer"
+                    style={{ background: '#F05731' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = '#D0401D')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = '#F05731')}
+                  >
+                    <span className="material-symbols-outlined text-base">videocam</span>
+                    Ambil Foto #{capturedPhotos.length + 1}
+                  </button>
+                )}
 
                 {/* Hidden native input locked to camera only (capture="environment") */}
                 <input
@@ -563,61 +619,70 @@ export default function SelfAssessment({
               </div>
             )}
 
-            {/* Photos Preview Grid */}
-            {capturedPhotos.length === 0 && !isProcessingPhoto && (
-              <div className="py-12 flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 rounded-2xl bg-[#FFF5F3] flex items-center justify-center text-[#F05731] mb-3">
-                  <span className="material-symbols-outlined text-3xl">add_a_photo</span>
-                </div>
-                <p className="text-sm font-bold text-[#353750]">Belum ada foto bukti yang diambil</p>
-                <p className="text-xs text-[#8A8DA8] max-w-sm mt-1">
-                  Klik tombol <strong>"Buka Kamera Langsung"</strong> di atas untuk mengambil foto bukti 5S di sub-area ini.
-                </p>
-              </div>
-            )}
+            {/* 5-Slot Interactive Photo Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
+              {/* Slot Foto yang sudah diambil */}
+              {capturedPhotos.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="relative group rounded-xl overflow-hidden border-2 border-[#353750] shadow-md bg-black h-48 flex flex-col justify-between"
+                >
+                  <img
+                    src={item.previewUrl}
+                    alt={`Evidence ${idx + 1}`}
+                    className="w-full h-full object-cover cursor-pointer transition-transform group-hover:scale-105"
+                    onClick={() => setZoomPhotoUrl(item.previewUrl)}
+                  />
 
-            {capturedPhotos.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {capturedPhotos.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="relative group rounded-xl overflow-hidden border-2 border-[#353750] shadow-md bg-black"
-                  >
-                    <img
-                      src={item.previewUrl}
-                      alt={`Evidence ${idx + 1}`}
-                      className="w-full h-52 object-cover cursor-pointer transition-transform group-hover:scale-102"
-                      onClick={() => setZoomPhotoUrl(item.previewUrl)}
-                    />
-
-                    {/* Watermark Tag Badge */}
-                    <div className="absolute top-2 left-2 bg-black/80 backdrop-blur-sm text-[#FAB931] px-2 py-0.5 rounded text-[10px] font-mono font-bold flex items-center gap-1 border border-[#FAB931]/40">
-                      <span className="material-symbols-outlined text-xs">verified</span>
-                      Watermarked
-                    </div>
-
-                    {/* Delete button */}
-                    <button
-                      type="button"
-                      onClick={() => handleRemovePhoto(idx)}
-                      className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center opacity-90 hover:opacity-100 shadow transition-all"
-                      title="Hapus foto"
-                    >
-                      <span className="material-symbols-outlined text-sm">delete</span>
-                    </button>
-
-                    {/* Zoom prompt */}
-                    <div
-                      onClick={() => setZoomPhotoUrl(item.previewUrl)}
-                      className="absolute bottom-2 right-2 bg-[#353750]/90 text-white px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1 cursor-pointer"
-                    >
-                      <span className="material-symbols-outlined text-xs">zoom_in</span>
-                      Lihat Stempel
-                    </div>
+                  {/* Top Header inside card */}
+                  <div className="absolute top-2 left-2 bg-black/80 backdrop-blur-sm text-[#FAB931] px-2 py-0.5 rounded text-[10px] font-mono font-bold flex items-center gap-1 border border-[#FAB931]/40">
+                    <span className="material-symbols-outlined text-xs">verified</span>
+                    Foto {idx + 1}/5
                   </div>
-                ))}
-              </div>
-            )}
+
+                  {/* Delete button */}
+                  <button
+                    type="button"
+                    onClick={() => handleRemovePhoto(idx)}
+                    className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition-all"
+                    title="Hapus / Ambil Ulang Foto Ini"
+                  >
+                    <span className="material-symbols-outlined text-sm">delete</span>
+                  </button>
+
+                  {/* Bottom Zoom Prompt */}
+                  <div
+                    onClick={() => setZoomPhotoUrl(item.previewUrl)}
+                    className="absolute bottom-2 right-2 bg-[#353750]/90 hover:bg-[#353750] text-white px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1 cursor-pointer shadow"
+                  >
+                    <span className="material-symbols-outlined text-xs">zoom_in</span>
+                    Lihat Stempel
+                  </div>
+                </div>
+              ))}
+
+              {/* Slot Kosong / Placeholder (sampai total 5) */}
+              {Array.from({ length: MAX_PHOTOS - capturedPhotos.length }).map((_, emptyIdx) => {
+                const slotNumber = capturedPhotos.length + emptyIdx + 1;
+                return (
+                  <div
+                    key={`empty-${slotNumber}`}
+                    onClick={startLiveCamera}
+                    className="h-48 rounded-xl border-2 border-dashed border-[#D5D5E2] hover:border-[#F05731] bg-[#FAFAFC] hover:bg-[#FFF5F3] flex flex-col items-center justify-center text-center p-3 cursor-pointer transition-all group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-white shadow-sm border border-[#E0E0EC] group-hover:border-[#F05731] flex items-center justify-center text-[#8A8DA8] group-hover:text-[#F05731] mb-2 transition-colors">
+                      <span className="material-symbols-outlined text-xl">add_a_photo</span>
+                    </div>
+                    <span className="text-xs font-extrabold text-[#353750] group-hover:text-[#F05731] transition-colors">
+                      Slot Foto #{slotNumber}
+                    </span>
+                    <span className="text-[10px] text-[#8A8DA8] mt-0.5 font-semibold">
+                      Klik untuk jepret kamera
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Submit Action */}
@@ -755,7 +820,22 @@ export default function SelfAssessment({
                       </td>
 
                       <td className="py-3 px-4 text-center">
-                        {item.assessment?.primaryPhotoUrl ? (
+                        {item.assessment?.photos && item.assessment.photos.length > 0 ? (
+                          <div className="flex items-center justify-center gap-1 flex-wrap max-w-[140px] mx-auto">
+                            {item.assessment.photos.map((p, pIdx) => (
+                              <button
+                                key={pIdx}
+                                type="button"
+                                onClick={() => setZoomPhotoUrl(p.url)}
+                                className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md border border-[#353750]/30 hover:border-[#F05731] bg-white text-[#353750] hover:text-[#F05731] font-bold text-[10px] transition-all cursor-pointer shadow-xs"
+                                title={`Lihat Foto Bukti #${pIdx + 1}`}
+                              >
+                                <span className="material-symbols-outlined text-[10px] text-[#F05731]">photo_camera</span>
+                                #{pIdx + 1}
+                              </button>
+                            ))}
+                          </div>
+                        ) : item.assessment?.primaryPhotoUrl ? (
                           <button
                             type="button"
                             onClick={() => setZoomPhotoUrl(item.assessment.primaryPhotoUrl)}
@@ -833,6 +913,25 @@ export default function SelfAssessment({
                     </div>
                   </div>
 
+                  {/* Thumbnail strip for multiple photos (up to 5) */}
+                  {item.photos && item.photos.length > 1 && (
+                    <div className="flex items-center gap-1.5 p-2 bg-[#1B1D26] overflow-x-auto hide-scrollbar">
+                      <span className="text-[10px] font-bold text-gray-400 pl-1 uppercase shrink-0">
+                        {item.photos.length} Foto:
+                      </span>
+                      {item.photos.map((p, pIdx) => (
+                        <img
+                          key={pIdx}
+                          src={p.url}
+                          alt={`Thumbnail ${pIdx + 1}`}
+                          onClick={() => setZoomPhotoUrl(p.url)}
+                          className="w-10 h-10 object-cover rounded-md border border-white/20 hover:border-[#F05731] cursor-pointer shrink-0 transition-all hover:scale-105"
+                          title={`Klik untuk lihat Foto #${pIdx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  )}
+
                   {/* Details */}
                   <div className="p-4 flex-1 flex flex-col justify-between">
                     <div>
@@ -876,7 +975,9 @@ export default function SelfAssessment({
             <div className="p-4 px-6 flex items-center justify-between border-b border-gray-800 text-white">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#F05731]">photo_camera</span>
-                <span className="font-extrabold text-xs uppercase tracking-wider">Kamera Langsung AoC</span>
+                <span className="font-extrabold text-xs uppercase tracking-wider">
+                  Kamera Langsung AoC • Mengambil Foto ke-{capturedPhotos.length + 1} dari {MAX_PHOTOS}
+                </span>
               </div>
               <button
                 type="button"
@@ -984,3 +1085,4 @@ export default function SelfAssessment({
     </div>
   );
 }
+
