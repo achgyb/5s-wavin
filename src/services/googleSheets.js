@@ -128,6 +128,17 @@ export const sheetsDB = {
     delete: (id) => deleteRowById(S.DEPARTMENTS, 'id', id),
   },
 
+  // ── Self Assessments (AoC Weekly) ─────────────────────────────────────────
+  selfAssessments: {
+    headers: ['id', 'weekCode', 'weekLabel', 'year', 'area', 'subAreaId', 'subAreaName', 'aocName', 'aocEmail', 'submittedAt', 'score', 'complianceStatus', 'scores', 'notes', 'primaryPhotoUrl', 'watermarkTimestamp'],
+    getAll: () => readSheet(S.SELF_ASSESSMENTS || 'Self_Assessments'),
+    add: (sa) => appendRow(S.SELF_ASSESSMENTS || 'Self_Assessments', {
+      ...sa,
+      scores: typeof sa.scores === 'object' ? JSON.stringify(sa.scores) : sa.scores,
+      photos: typeof sa.photos === 'object' ? JSON.stringify(sa.photos) : (sa.photos || ''),
+    }),
+  },
+
   /** Initialize all sheet headers on first run */
   async initializeAllHeaders() {
     await Promise.all([
@@ -139,6 +150,7 @@ export const sheetsDB = {
       ensureHeaders(S.USERS_PENDING, this.usersPending.headers),
       ensureHeaders(S.ZONES, this.zones.headers),
       ensureHeaders(S.DEPARTMENTS, this.departments.headers),
+      ensureHeaders(S.SELF_ASSESSMENTS || 'Self_Assessments', this.selfAssessments.headers),
     ]);
   },
 };

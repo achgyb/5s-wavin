@@ -58,11 +58,13 @@ export default function Layout({
   }
 
   const isManager = currentUser?.role === 'MANAGER';
+  const isAoC = currentUser?.role === 'AOC';
 
   const navItems = isManager
     ? [
         { id: 'DASHBOARD',       label: 'Dashboard',          icon: 'dashboard' },
         { id: 'SAFETY_DASHBOARD',label: 'Safety Dashboard',   icon: 'health_and_safety' },
+        { id: 'SELF_ASSESSMENT', label: 'Self Assessment',    icon: 'verified' },
         { id: 'CHECKLIST',       label: 'Audit Checklist',    icon: 'fact_check' },
         { id: 'RED_TAG',         label: 'Red-Tag Flow',       icon: 'label_important' },
         { id: 'RED_TAG_REGISTRY',label: 'Red-Tag Registry',   icon: 'local_offer' },
@@ -70,8 +72,16 @@ export default function Layout({
         { id: 'SCHEDULE',        label: 'Audit Schedule',     icon: 'calendar_month' },
         { id: 'ADMIN',           label: 'Admin Settings',     icon: 'settings' },
       ]
+    : isAoC
+    ? [
+        { id: 'SELF_ASSESSMENT', label: 'Self Assessment',    icon: 'verified' },
+        { id: 'CHECKLIST',       label: 'Audit Checklist',    icon: 'fact_check' },
+        { id: 'RED_TAG',         label: 'Red-Tag Flow',       icon: 'label_important' },
+        { id: 'RED_TAG_REGISTRY',label: 'Red-Tag Registry',   icon: 'local_offer' },
+      ]
     : [
         { id: 'CHECKLIST',       label: 'Audit Checklist',    icon: 'fact_check' },
+        { id: 'SELF_ASSESSMENT', label: 'Self Assessment',    icon: 'verified' },
         { id: 'RED_TAG',         label: 'Red-Tag Flow',       icon: 'label_important' },
         { id: 'RED_TAG_REGISTRY',label: 'Red-Tag Registry',   icon: 'local_offer' },
       ];

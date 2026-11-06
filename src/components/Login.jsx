@@ -148,17 +148,17 @@ export default function Login({ onLogin, approvedUsers = [] }) {
             <div className="flex flex-col items-center gap-2">
               <div className="w-16 h-16 rounded-2xl bg-[#F4F4F6] border border-[#E0E0EC] flex items-center justify-center shadow-inner">
                 <span className="material-symbols-outlined text-[#353750] text-4xl">
-                  {role === 'MANAGER' ? 'manage_accounts' : 'engineering'}
+                  {role === 'MANAGER' ? 'manage_accounts' : role === 'AOC' ? 'verified' : 'engineering'}
                 </span>
               </div>
               <span className="text-xs font-bold text-[#6B6E8A] uppercase tracking-wider">
-                Masuk Sebagai {role === 'MANAGER' ? 'Manager / Auditor' : 'Operator Pabrik'}
+                Masuk Sebagai {role === 'MANAGER' ? 'Manager / Auditor' : role === 'AOC' ? 'Agent of Change (AoC)' : 'Operator Pabrik'}
               </span>
             </div>
 
             {/* Role switch toggle */}
             <div className="flex rounded-xl overflow-hidden border border-[#E0E0EC] bg-[#F4F4F6] p-1 gap-1">
-              {['OPERATOR', 'MANAGER'].map((r) => (
+              {['OPERATOR', 'AOC', 'MANAGER'].map((r) => (
                 <button
                   type="button"
                   key={r}
@@ -169,7 +169,7 @@ export default function Login({ onLogin, approvedUsers = [] }) {
                       : 'text-[#6B6E8A] hover:text-[#353750]'
                   }`}
                 >
-                  {r}
+                  {r === 'AOC' ? 'AoC' : r}
                 </button>
               ))}
             </div>
@@ -244,17 +244,29 @@ export default function Login({ onLogin, approvedUsers = [] }) {
               <span className="text-[11px] font-bold text-[#8A8DA8] uppercase tracking-wider text-center">
                 Akun Cepat (Quick Login):
               </span>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
                   onClick={() => fillQuickAccount('operator', 'operator123', 'OPERATOR')}
                   className="p-2 rounded-lg border border-[#E0E0EC] hover:border-[#3DAA72] bg-[#F9F9FB] hover:bg-[#E8F5E9]/30 text-left transition-all"
                 >
-                  <div className="text-[11px] font-bold text-[#3DAA72] uppercase flex items-center gap-1">
+                  <div className="text-[10px] font-bold text-[#3DAA72] uppercase flex items-center gap-1">
                     <span className="material-symbols-outlined text-xs">engineering</span>
                     Operator
                   </div>
-                  <div className="text-[10px] text-[#6B6E8A] font-mono mt-0.5">operator / operator123</div>
+                  <div className="text-[9px] text-[#6B6E8A] font-mono mt-0.5 truncate">operator123</div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => fillQuickAccount('aoc', 'aoc123', 'AOC')}
+                  className="p-2 rounded-lg border border-[#E0E0EC] hover:border-[#FAB931] bg-[#F9F9FB] hover:bg-[#FFF9E6] text-left transition-all"
+                >
+                  <div className="text-[10px] font-bold text-[#D08A00] uppercase flex items-center gap-1">
+                    <span className="material-symbols-outlined text-xs">verified</span>
+                    AoC
+                  </div>
+                  <div className="text-[9px] text-[#6B6E8A] font-mono mt-0.5 truncate">aoc123</div>
                 </button>
 
                 <button
@@ -262,11 +274,11 @@ export default function Login({ onLogin, approvedUsers = [] }) {
                   onClick={() => fillQuickAccount('admin', 'admin123', 'MANAGER')}
                   className="p-2 rounded-lg border border-[#E0E0EC] hover:border-[#F05731] bg-[#F9F9FB] hover:bg-[#FFF5F3] text-left transition-all"
                 >
-                  <div className="text-[11px] font-bold text-[#F05731] uppercase flex items-center gap-1">
+                  <div className="text-[10px] font-bold text-[#F05731] uppercase flex items-center gap-1">
                     <span className="material-symbols-outlined text-xs">manage_accounts</span>
                     Manager
                   </div>
-                  <div className="text-[10px] text-[#6B6E8A] font-mono mt-0.5">admin / admin123</div>
+                  <div className="text-[9px] text-[#6B6E8A] font-mono mt-0.5 truncate">admin123</div>
                 </button>
               </div>
             </div>

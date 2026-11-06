@@ -9,6 +9,7 @@ import SafetyDashboard from './components/SafetyDashboard';
 import ActionTracker from './components/ActionTracker';
 import Schedule from './components/Schedule';
 import AdminPanel from './components/AdminPanel';
+import SelfAssessment from './components/SelfAssessment';
 import CompanyEmailModal from './components/CompanyEmailModal';
 import { initGoogleAuth, isSignedIn, signInWithGoogle, getValidToken } from './services/googleAuth';
 import { sheetsDB, readSheet } from './services/googleSheets';
@@ -136,6 +137,32 @@ const DEFAULT_APPROVED_USERS = [
     companyEmail: 'dicky.setyawan@gmail.com',
     department: 'PRODUCTION'
   },
+  {
+    id: 'user-aoc-andi',
+    name: 'ANDI PRATAMA (AoC)',
+    username: 'aoc',
+    password: 'aoc123',
+    role: 'AOC',
+    authType: 'CREDENTIAL',
+    approvedAt: '2026-01-01',
+    avatar: 'AP',
+    avatarColor: '#FAB931',
+    companyEmail: 'andi@wavin.com',
+    department: 'EXTRUSION'
+  },
+  {
+    id: 'user-aoc-siti',
+    name: 'SITI RAHMA (AoC)',
+    username: 'aoc_siti',
+    password: 'aoc123',
+    role: 'AOC',
+    authType: 'CREDENTIAL',
+    approvedAt: '2026-01-01',
+    avatar: 'SR',
+    avatarColor: '#F05731',
+    companyEmail: 'siti@wavin.com',
+    department: 'INJECTION'
+  },
 ];
 
 function App() {
@@ -148,6 +175,7 @@ function App() {
   const [schedules, setSchedules] = useState(() => getInitialState('5s_schedules', MOCK_SCHEDULES));
   const [zones, setZones] = useState(() => getInitialState('5s_zones', DEFAULT_ZONES));
   const [departments, setDepartments] = useState(() => getInitialState('5s_departments', DEFAULT_DEPARTMENTS));
+  const [selfAssessments, setSelfAssessments] = useState(() => getInitialState('5s_selfAssessments', []));
 
 
   // ─── Google Services Init ────────────────────────────────────────────────
@@ -193,7 +221,8 @@ function App() {
             sheetZones,
             sheetDepts,
             sheetApproved,
-            sheetPending
+            sheetPending,
+            sheetSelfAssessments
           ] = await Promise.all([
             sheetsDB.audits.getAll(),
             sheetsDB.redTags.getAll(),
@@ -202,7 +231,8 @@ function App() {
             sheetsDB.zones.getAll(),
             sheetsDB.departments.getAll(),
             sheetsDB.usersApproved.getAll(),
-            sheetsDB.usersPending.getAll()
+            sheetsDB.usersPending.getAll(),
+            sheetsDB.selfAssessments.getAll().catch(() => [])
           ]);
 
           // 3. Populate state if sheets contain data
@@ -229,6 +259,7 @@ function App() {
           if (sheetDepts.length > 0) setDepartments(sheetDepts);
           if (sheetApproved.length > 0) setApprovedUsers(sheetApproved);
           if (sheetPending.length > 0) setPendingUsers(sheetPending);
+          if (sheetSelfAssessments && sheetSelfAssessments.length > 0) setSelfAssessments(sheetSelfAssessments);
 
           console.log('Successfully synced database with Google Sheets.');
         } catch (err) {
@@ -262,6 +293,7 @@ function App() {
   useEffect(() => { localStorage.setItem('5s_departments', JSON.stringify(departments)); }, [departments]);
   useEffect(() => { localStorage.setItem('5s_pendingUsers', JSON.stringify(pendingUsers)); }, [pendingUsers]);
   useEffect(() => { localStorage.setItem('5s_approvedUsers', JSON.stringify(approvedUsers)); }, [approvedUsers]);
+  useEffect(() => { localStorage.setItem('5s_selfAssessments', JSON.stringify(selfAssessments)); }, [selfAssessments]);
 
   // Migration effect to patch older localStorage zones with default departments
   useEffect(() => {
@@ -533,12 +565,27 @@ function App() {
     }
   };
 
+  /** Submit AoC Self Assessment */
+  const handleSubmitSelfAssessment = async (newAssessment) => {
+    setSelfAssessments((prev) => [newAssessment, ...prev]);
+
+    if (isGoogleConfigured()) {
+      try {
+        await sheetsDB.selfAssessments.add(newAssessment);
+      } catch (err) {
+        console.error('Failed to save self assessment to Sheets:', err);
+      }
+    }
+  };
+
   // ─── View Routing ────────────────────────────────────────────────────────────
 
   const handleLogin = (user) => {
     setCurrentUser(user);
     if (user.role === 'MANAGER') {
       setCurrentView('DASHBOARD');
+    } else if (user.role === 'AOC') {
+      setCurrentView('SELF_ASSESSMENT');
     } else {
       setCurrentView('CHECKLIST');
     }
@@ -860,6 +907,15 @@ function App() {
 
       {currentView === 'CHECKLIST' && (
         <Checklist currentUser={currentUser} onSubmitAudit={handleSubmitAudit} zones={zones} departments={departments} />
+      )}
+
+      {currentView === 'SELF_ASSESSMENT' && (
+        <SelfAssessment
+          currentUser={currentUser}
+          selfAssessments={selfAssessments}
+          onSubmitAssessment={handleSubmitSelfAssessment}
+          isGoogleConfigured={isGoogleConfigured()}
+        />
       )}
 
       {currentView === 'RED_TAG' && (

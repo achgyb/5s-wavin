@@ -52,6 +52,7 @@ export const GOOGLE_CONFIG = {
     USERS_PENDING: 'Users_Pending',
     ZONES: 'Zones',
     DEPARTMENTS: 'Departments',
+    SELF_ASSESSMENTS: 'Self_Assessments',
   },
 };
 

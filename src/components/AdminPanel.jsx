@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ROLE_OPTIONS = ['OPERATOR', 'MANAGER'];
+const ROLE_OPTIONS = ['OPERATOR', 'AOC', 'MANAGER'];
 
 export default function AdminPanel({
   zones,
@@ -396,6 +396,7 @@ export default function AdminPanel({
                     onChange={(e) => setNewUserRole(e.target.value)}
                   >
                     <option value="OPERATOR">OPERATOR</option>
+                    <option value="AOC">AOC (AGENT OF CHANGE)</option>
                     <option value="MANAGER">MANAGER</option>
                   </select>
                 </div>
