@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>5S Audit Checklist</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#001f25",
+                        "secondary-fixed-dim": "#c5c6cc",
+                        "surface-container": "#1e2023",
+                        "tertiary": "#b4f0ff",
+                        "secondary": "#c5c6cc",
+                        "on-secondary-container": "#b6b8be",
+                        "border-gray": "#2C3036",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#fabd00",
+                        "on-background": "#e2e2e6",
+                        "surface-bright": "#37393d",
+                        "surface": "#111317",
+                        "outline": "#9c8f78",
+                        "on-error": "#690005",
+                        "tertiary-container": "#00defd",
+                        "tertiary-fixed-dim": "#00daf8",
+                        "surface-dim": "#111317",
+                        "tertiary-fixed": "#a5eeff",
+                        "primary-fixed-dim": "#fabd00",
+                        "safety-orange": "#FF6D00",
+                        "inverse-primary": "#785900",
+                        "outline-variant": "#4f4632",
+                        "on-primary-fixed-variant": "#5b4300",
+                        "primary": "#ffe4af",
+                        "surface-container-lowest": "#0c0e11",
+                        "inverse-on-surface": "#2f3034",
+                        "text-primary": "#F5F5F5",
+                        "primary-fixed": "#ffdf9e",
+                        "on-tertiary-fixed-variant": "#004e5a",
+                        "on-secondary": "#2e3135",
+                        "on-surface-variant": "#d4c5ab",
+                        "secondary-fixed": "#e1e2e8",
+                        "surface-variant": "#333538",
+                        "on-surface": "#e2e2e6",
+                        "text-secondary": "#9AA0A6",
+                        "surface-container-high": "#282a2d",
+                        "inverse-surface": "#e2e2e6",
+                        "on-primary-fixed": "#261a00",
+                        "on-tertiary": "#00363f",
+                        "on-primary": "#3f2e00",
+                        "on-primary-container": "#6d5100",
+                        "surface-container-highest": "#333538",
+                        "on-error-container": "#ffdad6",
+                        "safety-red": "#FF3B30",
+                        "on-tertiary-container": "#005e6c",
+                        "safety-green": "#00C853",
+                        "primary-container": "#ffc107",
+                        "on-secondary-fixed-variant": "#44474b",
+                        "surface-container-low": "#1a1c1f",
+                        "on-secondary-fixed": "#191c20",
+                        "secondary-container": "#46494e",
+                        "error-container": "#93000a",
+                        "background": "#111317"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "touch-target-min": "48px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "stack-md": "16px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Barlow Condensed"],
+                        "display-lg": ["Barlow Condensed"],
+                        "headline-lg": ["Barlow Condensed"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Barlow Condensed"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pass-active { background-color: #00C853 !important; color: white !important; }
+        .fail-active { background-color: #FF3B30 !important; color: white !important; }
+        .na-active { background-color: #2C3036 !important; color: #9AA0A6 !important; }
+        
+        /* Custom scrollbar for rugged look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111317; }
+        ::-webkit-scrollbar-thumb { background: #2C3036; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4f4632; }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-open .accordion-content {
+            max-height: 2000px;
+        }
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-open .rotate-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24">
+<!-- Top App Bar -->
+<header class="bg-surface dark:bg-surface-dim border-b border-border-gray flex justify-between items-center px-margin-mobile w-full h-14 sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="precision_manufacturing">precision_manufacturing</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary-container tracking-wider">5S AUDIT SYSTEM</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant p-2 rounded transition-colors cursor-pointer" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<!-- Zone Header & Photo -->
+<section class="relative w-full h-48 md:h-64 overflow-hidden border-b-4 border-primary-container">
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10"></div>
+<div class="w-full h-full bg-cover bg-center grayscale brightness-50" data-alt="A gritty, high-contrast industrial factory floor interior showing heavy machinery, yellow safety floor markings, and organized tool stations under cool overhead lighting. The aesthetic is rugged and utilitarian, with a dark charcoal and metallic color palette. Sharp focus on technical details of the assembly line environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCXUIWvILMKwrSGT9RoN2Wo7lc9rGPPfHlhr8NrcOPrMWXuTBsILksfX241YiHLLx5VkJeNDnubzubid4k4Ync41Xt7sxnBi-lSxfWZSp8Q3uMbECuZKn5QSfDySeaEjYEjdl_LZozSftP1GC9A5wmodv6bpEgNFPWbKkDHkEK_BEg0l-97f3IslPbFjT09NmBO99aXb50xbjIxjh9O6p3KddOLS_jJgDimeq6wPiF0LulCSEaTiBtH9e1Hnemm6yNzjEyRsQhT3hI8')"></div>
+<div class="absolute bottom-4 left-margin-mobile z-20">
+<p class="text-primary-container font-label-sm uppercase tracking-widest mb-1">Current Inspection Zone</p>
+<h2 class="font-display-lg text-display-lg uppercase leading-none">PLANT 04 - ZONE B</h2>
+</div>
+<!-- Running Score Indicator -->
+<div class="absolute top-4 right-margin-mobile z-20 flex flex-col items-end">
+<div class="bg-surface-container-highest border-2 border-primary-container p-3 flex flex-col items-center min-w-[80px]">
+<span class="font-label-sm text-secondary uppercase leading-none">Score</span>
+<span class="font-display-lg text-primary-container leading-none" id="running-score">0%</span>
+</div>
+</div>
+</section>
+<main class="max-w-4xl mx-auto px-margin-mobile mt-stack-lg space-y-4">
+<!-- 5S Checklist Sections -->
+<div class="space-y-4" id="audit-form">
+<!-- Section Template: SORT -->
+<div class="accordion-item bg-surface-container border border-border-gray overflow-hidden">
+<button class="w-full flex justify-between items-center p-4 bg-surface-container-high border-b border-border-gray hover:bg-surface-variant transition-colors" onclick="toggleAccordion(this)">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 flex items-center justify-center bg-primary-container text-on-primary font-bold">1</span>
+<h3 class="font-headline-md text-headline-md uppercase">SORT (Seiri)</h3>
+</div>
+<span class="material-symbols-outlined rotate-icon" data-icon="expand_more">expand_more</span>
+</button>
+<div class="accordion-content">
+<div class="p-4 space-y-8">
+<!-- Audit Question Item -->
+<div class="audit-row space-y-4 pb-4 border-b border-border-gray/30 last:border-0" data-status="pending">
+<p class="font-body-lg text-body-lg">Are unnecessary items (tools, debris, parts) removed from the workspace?</p>
+<div class="flex flex-wrap gap-2">
+<button class="flex-1 h-touch-target-min border-2 border-safety-green/30 text-safety-green font-bold uppercase hover:bg-safety-green/10 transition-all rounded-lg flex items-center justify-center gap-2" onclick="setStatus(this, 'pass')">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle">check_circle</span> PASS
+                                </button>
+<button class="flex-1 h-touch-target-min border-2 border-safety-red/30 text-safety-red font-bold uppercase hover:bg-safety-red/10 transition-all rounded-lg flex items-center justify-center gap-2" onclick="setStatus(this, 'fail')">
+<span class="material-symbols-outlined text-[18px]" data-icon="cancel">cancel</span> FAIL
+                                </button>
+<button class="flex-1 h-touch-target-min border-2 border-secondary/30 text-secondary font-bold uppercase hover:bg-secondary/10 transition-all rounded-lg flex items-center justify-center gap-2" onclick="setStatus(this, 'na')">
+<span class="material-symbols-outlined text-[18px]" data-icon="do_not_disturb_on">do_not_disturb_on</span> N/A
+                                </button>
+</div>
+<div class="action-panel hidden grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+<div class="space-y-2">
+<label class="font-label-sm uppercase text-secondary">Corrective Action Notes</label>
+<textarea class="w-full bg-surface-container-lowest border-2 border-border-gray focus:border-primary-container text-on-surface p-3 min-h-[100px] resize-none outline-none transition-colors" placeholder="Describe why this failed..."></textarea>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm uppercase text-secondary">Evidence Photo</label>
+<div class="w-full h-[100px] border-2 border-dashed border-border-gray flex flex-col items-center justify-center bg-surface-container-lowest hover:border-primary-container cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-secondary" data-icon="add_a_photo">add_a_photo</span>
+<span class="text-label-sm text-secondary mt-1">TAP TO CAPTURE</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Second Question -->
+<div class="audit-row space-y-4 pb-4" data-status="pending">
+<p class="font-body-lg text-body-lg">Is the Red Tag area currently managed and items disposed of weekly?</p>
+<div class="flex flex-wrap gap-2">
+<button class="flex-1 h-touch-target-min border-2 border-safety-green/30 text-safety-green font-bold uppercase hover:bg-safety-green/10 transition-all rounded-lg flex items-center justify-center gap-2" onclick="setStatus(this, 'pass')">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle">check_circle</span> PASS
+                                </button>
+<button class="flex-1 h-touch-target-min border-2 border-safety-red/30 text-safety-red font-bold uppercase hover:bg-safety-red/10 transition-all rounded-lg flex items-center justify-center gap-2" onclick="setStatus(this, 'fail')">
+<span class="material-symbols-outlined text-[18px]" data-icon="cancel">cancel</span> FAIL
+                                </button>
+<button class="flex-1 h-touch-target-min border-2 border-secondary/30 text-secondary font-bold uppercase hover:bg-secondary/10 transition-all rounded-lg flex items-center justify-center gap-2" onclick="setStatus(this, 'na')">
+<span class="material-symbols-outlined text-[18px]" data-icon="do_not_disturb_on">do_not_disturb_on</span> N/A
+                                </button>
+</div>
+<div class="action-panel hidden grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+<div class="space-y-2">
+<label class="font-label-sm uppercase text-secondary">Notes</label>
+<textarea class="w-full bg-surface-container-lowest border-2 border-border-gray focus:border-primary-container text-on-surface p-3 min-h-[100px] outline-none transition-colors"></textarea>
+</div>
+<div class="flex items-end">
+<div class="w-full h-touch-target-min border-2 border-border-gray flex items-center justify-center bg-surface-container-lowest hover:border-primary-container cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-secondary" data-icon="camera">camera</span>
+<span class="text-label-sm text-secondary ml-2">UPLOAD EVIDENCE</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: SET IN ORDER -->
+<div class="accordion-item bg-surface-container border border-border-gray overflow-hidden">
+<button class="w-full flex justify-between items-center p-4 bg-surface-container-high border-b border-border-gray hover:bg-surface-variant transition-colors" onclick="toggleAccordion(this)">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 flex items-center justify-center bg-primary-container text-on-primary font-bold">2</span>
+<h3 class="font-headline-md text-headline-md uppercase">SET IN ORDER (Seiton)</h3>
+</div>
+<span class="material-symbols-outlined rotate-icon" data-icon="expand_more">expand_more</span>
+</button>
+<div class="accordion-content">
+<div class="p-4"><p class="text-secondary italic">Checklist items for organization hierarchy and storage logic...</p></div>
+</div>
+</div>
+<!-- Section 3: SHINE -->
+<div class="accordion-item bg-surface-container border border-border-gray overflow-hidden">
+<button class="w-full flex justify-between items-center p-4 bg-surface-container-high border-b border-border-gray hover:bg-surface-variant transition-colors" onclick="toggleAccordion(this)">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 flex items-center justify-center bg-primary-container text-on-primary font-bold">3</span>
+<h3 class="font-headline-md text-headline-md uppercase">SHINE (Seiso)</h3>
+</div>
+<span class="material-symbols-outlined rotate-icon" data-icon="expand_more">expand_more</span>
+</button>
+<div class="accordion-content">
+<div class="p-4"><p class="text-secondary italic">Checklist items for cleanliness and machine maintenance...</p></div>
+</div>
+</div>
+<!-- Section 4: STANDARDIZE -->
+<div class="accordion-item bg-surface-container border border-border-gray overflow-hidden">
+<button class="w-full flex justify-between items-center p-4 bg-surface-container-high border-b border-border-gray hover:bg-surface-variant transition-colors" onclick="toggleAccordion(this)">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 flex items-center justify-center bg-primary-container text-on-primary font-bold">4</span>
+<h3 class="font-headline-md text-headline-md uppercase">STANDARDIZE (Seiketsu)</h3>
+</div>
+<span class="material-symbols-outlined rotate-icon" data-icon="expand_more">expand_more</span>
+</button>
+<div class="accordion-content">
+<div class="p-4"><p class="text-secondary italic">Checklist items for visual management and process labels...</p></div>
+</div>
+</div>
+<!-- Section 5: SUSTAIN -->
+<div class="accordion-item bg-surface-container border border-border-gray overflow-hidden">
+<button class="w-full flex justify-between items-center p-4 bg-surface-container-high border-b border-border-gray hover:bg-surface-variant transition-colors" onclick="toggleAccordion(this)">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 flex items-center justify-center bg-primary-container text-on-primary font-bold">5</span>
+<h3 class="font-headline-md text-headline-md uppercase">SUSTAIN (Shitsuke)</h3>
+</div>
+<span class="material-symbols-outlined rotate-icon" data-icon="expand_more">expand_more</span>
+</button>
+<div class="accordion-content">
+<div class="p-4"><p class="text-secondary italic">Checklist items for discipline and regular scheduling...</p></div>
+</div>
+</div>
+</div>
+<!-- Submit Button Area -->
+<div class="mt-stack-lg pb-12">
+<button class="w-full h-touch-target-min bg-primary-container text-on-primary-fixed font-headline-md text-headline-md uppercase tracking-widest shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-3">
+<span class="material-symbols-outlined font-bold" data-icon="task_alt">task_alt</span>
+                SUBMIT AUDIT
+            </button>
+<p class="text-center text-secondary font-label-sm mt-4 uppercase">Ensuring Continuous Improvement Through Discipline</p>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 w-full z-50 h-touch-target-min flex justify-around items-center bg-surface-container-low pb-safe border-t-2 border-border-gray">
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-lg p-2 h-10 w-16">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="font-label-sm text-[10px] uppercase">Audits</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-label-sm text-[10px] uppercase">Zones</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="assignment_late">assignment_late</span>
+<span class="font-label-sm text-[10px] uppercase">Actions</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-[10px] uppercase">Profile</span>
+</div>
+</nav>
+<script>
+        function toggleAccordion(element) {
+            const item = element.parentElement;
+            item.classList.toggle('accordion-open');
+        }
+
+        function setStatus(btn, status) {
+            const row = btn.closest('.audit-row');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            const actionPanel = row.querySelector('.action-panel');
+            
+            // Clear previous active states
+            buttons.forEach(b => {
+                b.classList.remove('pass-active', 'fail-active', 'na-active');
+            });
+
+            // Set new active state
+            if (status === 'pass') {
+                btn.classList.add('pass-active');
+                actionPanel.classList.add('hidden');
+            } else if (status === 'fail') {
+                btn.classList.add('fail-active');
+                actionPanel.classList.remove('hidden');
+            } else if (status === 'na') {
+                btn.classList.add('na-active');
+                actionPanel.classList.add('hidden');
+            }
+
+            row.setAttribute('data-status', status);
+            calculateScore();
+        }
+
+        function calculateScore() {
+            const rows = document.querySelectorAll('.audit-row');
+            let total = 0;
+            let passes = 0;
+
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                if (status === 'pass') {
+                    total++;
+                    passes++;
+                } else if (status === 'fail') {
+                    total++;
+                }
+            });
+
+            const scoreDisplay = document.getElementById('running-score');
+            if (total === 0) {
+                scoreDisplay.innerText = "0%";
+            } else {
+                const score = Math.round((passes / total) * 100);
+                scoreDisplay.innerText = `${score}%`;
+                
+                // Color transition for score
+                if (score < 50) scoreDisplay.style.color = '#FF3B30';
+                else if (score < 80) scoreDisplay.style.color = '#FF6D00';
+                else scoreDisplay.style.color = '#00C853';
+            }
+        }
+
+        // Auto-expand first section for UX
+        window.addEventListener('DOMContentLoaded', () => {
+            const first = document.querySelector('.accordion-item');
+            if (first) first.classList.add('accordion-open');
+        });
+    </script>
+</body></html>

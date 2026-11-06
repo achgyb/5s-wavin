@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    @apply bg-background text-on-background font-body-md;
+    min-height: max(884px, 100dvh);
+    font-family: 'Nunito', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+  }
+}
+
+/* ── Material Icons ─────────────────────────────────────────────────────────── */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ── Status Buttons ─────────────────────────────────────────────────────────── */
+.pass-active {
+  background-color: #2E7D32 !important;
+  color: white !important;
+}
+.fail-active {
+  background-color: #D32F2F !important;
+  color: white !important;
+}
+.na-active {
+  background-color: #6B6E8A !important;
+  color: white !important;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F4F4F6;
+}
+::-webkit-scrollbar-thumb {
+  background: #D0D0DE;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #353750;
+}
+
+/* ── Accordion ──────────────────────────────────────────────────────────────── */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+.accordion-open .accordion-content {
+  max-height: 2000px;
+}
+.rotate-icon {
+  transition: transform 0.3s ease;
+}
+.accordion-open .rotate-icon {
+  transform: rotate(180deg);
+}
+
+/* ─── LOGIN PAGE — Wave bottom decoration ───────────────────────────────────── */
+.login-wave-bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 220px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ─── SIDEBAR — Orbia wave panel decoration ─────────────────────────────────── */
+.orbia-sidebar {
+  background: #353750;
+  position: relative;
+  overflow: hidden;
+}
+
+/* wave blob shapes inside sidebar */
+.orbia-sidebar-waves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ─── CARD / SURFACE ─────────────────────────────────────────────────────────── */
+.orbia-card {
+  background: #FFFFFF;
+  border: 1px solid #E0E0EC;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 4px rgba(53,55,80,0.06);
+}
+
+/* ─── BUTTON VARIANTS ────────────────────────────────────────────────────────── */
+.btn-orbia-primary {
+  background-color: #353750;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, transform 0.1s;
+}
+.btn-orbia-primary:hover {
+  background-color: #23253A;
+}
+.btn-orbia-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-orbia-coral {
+  background-color: #F05731;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, transform 0.1s;
+}
+.btn-orbia-coral:hover {
+  background-color: #D94520;
+}
+
+/* ─── PAGE HEADER STRIPE ─────────────────────────────────────────────────────── */
+.orbia-page-header {
+  background: linear-gradient(135deg, #353750 0%, #2A2C42 100%);
+  color: #FFFFFF;
+}
+
+/* ─── BADGE / CHIP ───────────────────────────────────────────────────────────── */
+.badge-green  { background: #E8F5E9; color: #2E7D32; }
+.badge-red    { background: #FFEBEE; color: #C62828; }
+.badge-orange { background: #FFF3E0; color: #E65100; }
+.badge-blue   { background: #E3F2FD; color: #1565C0; }
+.badge-gray   { background: #F3F3F7; color: #6B6E8A; }

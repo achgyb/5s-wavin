@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>5S Audit System - Corrective Action Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .kanban-column {
+            min-height: calc(100vh - 200px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #111317;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2C3036;
+        }
+        .drag-handle {
+            cursor: grab;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        /* Rugged Industrial Border */
+        .industrial-border {
+            box-shadow: inset 0 0 0 1px #2C3036;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed": "#001f25",
+                      "secondary-fixed-dim": "#c5c6cc",
+                      "surface-container": "#1e2023",
+                      "tertiary": "#b4f0ff",
+                      "secondary": "#c5c6cc",
+                      "on-secondary-container": "#b6b8be",
+                      "border-gray": "#2C3036",
+                      "error": "#ffb4ab",
+                      "surface-tint": "#fabd00",
+                      "on-background": "#e2e2e6",
+                      "surface-bright": "#37393d",
+                      "surface": "#111317",
+                      "outline": "#9c8f78",
+                      "on-error": "#690005",
+                      "tertiary-container": "#00defd",
+                      "tertiary-fixed-dim": "#00daf8",
+                      "surface-dim": "#111317",
+                      "tertiary-fixed": "#a5eeff",
+                      "primary-fixed-dim": "#fabd00",
+                      "safety-orange": "#FF6D00",
+                      "inverse-primary": "#785900",
+                      "outline-variant": "#4f4632",
+                      "on-primary-fixed-variant": "#5b4300",
+                      "primary": "#ffe4af",
+                      "surface-container-lowest": "#0c0e11",
+                      "inverse-on-surface": "#2f3034",
+                      "text-primary": "#F5F5F5",
+                      "primary-fixed": "#ffdf9e",
+                      "on-tertiary-fixed-variant": "#004e5a",
+                      "on-secondary": "#2e3135",
+                      "on-surface-variant": "#d4c5ab",
+                      "secondary-fixed": "#e1e2e8",
+                      "surface-variant": "#333538",
+                      "on-surface": "#e2e2e6",
+                      "text-secondary": "#9AA0A6",
+                      "surface-container-high": "#282a2d",
+                      "inverse-surface": "#e2e2e6",
+                      "on-primary-fixed": "#261a00",
+                      "on-tertiary": "#00363f",
+                      "on-primary": "#3f2e00",
+                      "on-primary-container": "#6d5100",
+                      "surface-container-highest": "#333538",
+                      "on-error-container": "#ffdad6",
+                      "safety-red": "#FF3B30",
+                      "on-tertiary-container": "#005e6c",
+                      "safety-green": "#00C853",
+                      "primary-container": "#ffc107",
+                      "on-secondary-fixed-variant": "#44474b",
+                      "surface-container-low": "#1a1c1f",
+                      "on-secondary-fixed": "#191c20",
+                      "secondary-container": "#46494e",
+                      "error-container": "#93000a",
+                      "background": "#111317"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "touch-target-min": "48px",
+                      "stack-sm": "8px",
+                      "margin-mobile": "16px",
+                      "gutter": "16px",
+                      "stack-lg": "24px",
+                      "stack-md": "16px",
+                      "margin-desktop": "32px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Barlow Condensed"],
+                      "display-lg": ["Barlow Condensed"],
+                      "headline-lg": ["Barlow Condensed"],
+                      "label-sm": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-md": ["Barlow Condensed"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "0.02em", "fontWeight": "800"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "0.01em", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container overflow-hidden h-screen flex flex-col md:flex-row">
+<!-- Navigation Drawer (Desktop) -->
+<aside class="hidden lg:flex flex-col h-screen fixed left-0 top-0 h-full w-64 border-r border-border-gray bg-surface-container dark:bg-surface-container-high z-50">
+<div class="p-stack-lg border-b border-border-gray">
+<h1 class="font-headline-md text-headline-md text-primary-container mb-stack-lg uppercase tracking-widest">5S AUDIT</h1>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-on-primary-container">person</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-primary">OPERATIONS MGR</div>
+<div class="text-[10px] text-secondary-fixed-dim uppercase tracking-tighter">Plant 04 - Zone B</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 py-4 overflow-y-auto">
+<a class="text-secondary hover:text-on-surface px-4 py-3 flex items-center gap-4 hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-secondary hover:text-on-surface px-4 py-3 flex items-center gap-4 hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Audit Manager</span>
+</a>
+<a class="bg-primary-container text-on-primary-container border-l-4 border-safety-orange font-bold px-4 py-3 flex items-center gap-4" href="#">
+<span class="material-symbols-outlined">plumbing</span>
+<span class="font-label-md text-label-md">Corrective Actions</span>
+</a>
+<a class="text-secondary hover:text-on-surface px-4 py-3 flex items-center gap-4 hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-md text-label-md">Site Map</span>
+</a>
+<a class="text-secondary hover:text-on-surface px-4 py-3 flex items-center gap-4 hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full lg:ml-64 relative">
+<!-- Top App Bar -->
+<header class="bg-surface dark:bg-surface-dim border-b border-border-gray w-full h-14 flex justify-between items-center px-margin-mobile md:px-margin-desktop sticky top-0 z-40">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">precision_manufacturing</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary-container tracking-wider uppercase">CORRECTIVE ACTIONS</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="h-10 w-10 flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+</button>
+<button class="h-10 w-10 flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Kanban Board Container -->
+<section class="flex-1 overflow-x-auto p-4 md:p-stack-lg custom-scrollbar">
+<div class="flex gap-gutter h-full min-w-[900px]">
+<!-- TO DO Column -->
+<div class="flex-1 flex flex-col bg-surface-container-low industrial-border p-2">
+<div class="flex items-center justify-between mb-4 px-2 py-2 border-b-2 border-safety-orange">
+<h3 class="font-headline-md text-headline-md uppercase tracking-widest text-on-surface flex items-center gap-2">
+                            TO DO
+                            <span class="text-label-sm bg-surface-variant px-2 py-0.5 rounded text-secondary">3</span>
+</h3>
+<button class="text-primary hover:bg-surface-variant h-8 w-8 flex items-center justify-center">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-4 overflow-y-auto kanban-column custom-scrollbar pr-1">
+<!-- Card 1 -->
+<div class="bg-surface-container-high border border-border-gray p-3 flex flex-col gap-3 group active:scale-95 transition-all">
+<div class="flex justify-between items-start">
+<span class="bg-safety-red text-white text-[10px] font-bold px-2 py-0.5 uppercase">CRITICAL</span>
+<span class="material-symbols-outlined text-secondary text-sm drag-handle">drag_indicator</span>
+</div>
+<div class="font-body-md text-on-surface line-clamp-2">Hydraulic oil leak detected on Press 04 Main Cylinder. Hazard risk high.</div>
+<div class="industrial-border relative w-full aspect-video overflow-hidden">
+<img class="object-cover w-full h-full grayscale-[0.5] contrast-125" data-alt="A gritty industrial close-up of a large black hydraulic machine cylinder leaking amber-colored fluid onto a metallic floor. High-contrast, dark factory lighting, sharp metallic details, and safety-orange warning tape in the background. Industrial 5S audit style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCf2gzKOhIxUhd1lQcv0TJmww6RuYyQ7SIOLssy7CtSIlz-SQ6vsvGuj-HwHzdNniD2Tg-rggHWqSiY9d1Rh8Yn8i4vY1gxVWqY8rrmYQtpvnv0WZLc5fzabM8dhk2EW6p5xD5XOqvTGFsFTJz8QSZcp2uAo1BCf-25TWzxv-V2G8Ew7gLfR5cHnKODadNEm_rCZj-UvlaTVsNhF9K1oidNyVngJHdo_So25iBG33U0PiwStjBVv-QHza1X9xId6YXh-RgFUJrasPdr"/>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-label-sm text-secondary uppercase">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    ZONE B - FABRICATION
+                                </div>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-border-gray">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-surface-variant flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+<span class="text-label-sm">J. CHEN</span>
+</div>
+<div class="text-label-sm text-safety-red flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">event</span>
+                                        OCT 12
+                                    </div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-high border border-border-gray p-3 flex flex-col gap-3 group active:scale-95 transition-all">
+<div class="flex justify-between items-start">
+<span class="bg-safety-orange text-black text-[10px] font-bold px-2 py-0.5 uppercase">MEDIUM</span>
+<span class="material-symbols-outlined text-secondary text-sm drag-handle">drag_indicator</span>
+</div>
+<div class="font-body-md text-on-surface">Damaged floor marking at Forklift Crossing 02.</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-label-sm text-secondary uppercase">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    ZONE A - LOGISTICS
+                                </div>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-border-gray">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-surface-variant flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+<span class="text-label-sm">A. SMITH</span>
+</div>
+<div class="text-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">event</span>
+                                        OCT 15
+                                    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- IN PROGRESS Column -->
+<div class="flex-1 flex flex-col bg-surface-container-low industrial-border p-2">
+<div class="flex items-center justify-between mb-4 px-2 py-2 border-b-2 border-primary-container">
+<h3 class="font-headline-md text-headline-md uppercase tracking-widest text-on-surface flex items-center gap-2">
+                            IN PROGRESS
+                            <span class="text-label-sm bg-surface-variant px-2 py-0.5 rounded text-secondary">1</span>
+</h3>
+</div>
+<div class="flex-1 flex flex-col gap-4 overflow-y-auto kanban-column custom-scrollbar pr-1">
+<!-- Card 3 -->
+<div class="bg-surface-container-high border border-border-gray p-3 flex flex-col gap-3 group active:scale-95 transition-all border-l-4 border-primary-container">
+<div class="flex justify-between items-start">
+<span class="bg-primary-container text-on-primary-container text-[10px] font-bold px-2 py-0.5 uppercase">PRIORITY</span>
+<span class="material-symbols-outlined text-secondary text-sm drag-handle">drag_indicator</span>
+</div>
+<div class="font-body-md text-on-surface">Shadow board tool missing at Station 04. Re-ordering metric set.</div>
+<div class="industrial-border relative w-full aspect-video overflow-hidden">
+<img class="object-cover w-full h-full grayscale-[0.2]" data-alt="A dark grey shadow board in a manufacturing facility with outlines of tools. Some tools are missing, showing empty spaces. Harsh industrial lighting, vibrant yellow borders on the tool outlines, high-contrast shadows. Modern factory aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWJ-HbbQAm0liIF7GEUo-dWZxbaX-AiM673c2w_bSmkgVJqAwfyP8ivKJL-y8FDjxExpPw10hldytG-8u2jSnC5wXK-82ZFgYCAc9UaZeFcijSpSycjeoqza1yZuqM3CFm0mcRhj5a_s5RDPfqpdAJHrHbyMgyrj6xIErixlxmilXUz6kzSNLIFFPwa1MHC-jbppbBQJyQPe-qxUb41EwEzyAdgEUY82NRgpc9aGf4m1PZWMGEcD7xQiz6lkqas1Ox9tgfq0MLQWCi"/>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-label-sm text-secondary uppercase">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    ZONE C - ASSEMBLY
+                                </div>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-border-gray">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-surface-variant flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+<span class="text-label-sm">R. VANCE</span>
+</div>
+<div class="text-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">event</span>
+                                        OCT 14
+                                    </div>
+</div>
+</div>
+<div class="w-full bg-surface-variant h-1 mt-1">
+<div class="bg-primary-container h-full w-[65%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- DONE Column -->
+<div class="flex-1 flex flex-col bg-surface-container-low industrial-border p-2">
+<div class="flex items-center justify-between mb-4 px-2 py-2 border-b-2 border-safety-green">
+<h3 class="font-headline-md text-headline-md uppercase tracking-widest text-on-surface flex items-center gap-2">
+                            DONE
+                            <span class="text-label-sm bg-surface-variant px-2 py-0.5 rounded text-secondary">2</span>
+</h3>
+</div>
+<div class="flex-1 flex flex-col gap-4 overflow-y-auto kanban-column custom-scrollbar pr-1 opacity-70 hover:opacity-100 transition-opacity">
+<!-- Card 4 -->
+<div class="bg-surface-container-high border border-border-gray p-3 flex flex-col gap-3 group active:scale-95 transition-all">
+<div class="flex justify-between items-start">
+<span class="bg-safety-green text-white text-[10px] font-bold px-2 py-0.5 uppercase">RESOLVED</span>
+<span class="material-symbols-outlined text-safety-green text-sm">check_circle</span>
+</div>
+<div class="font-body-md text-secondary line-through">Clean up spilled coolant near CNC-12.</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-label-sm text-secondary uppercase">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    ZONE B - MACHINING
+                                </div>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-border-gray">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-surface-variant flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+<span class="text-label-sm text-secondary">M. HOFFMAN</span>
+</div>
+<div class="text-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">event</span>
+                                        OCT 10
+                                    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Floating Action Button (FAB) Contextual -->
+<button class="fixed bottom-20 md:bottom-10 right-6 md:right-10 w-14 h-14 bg-primary-container text-on-primary-container shadow-lg flex items-center justify-center active:scale-95 transition-all hover:brightness-110 z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 h-touch-target-min flex justify-around items-center w-full bg-surface-container-low pb-safe border-t-2 border-border-gray">
+<a class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 active:scale-95 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-sm text-label-sm uppercase mt-1">Audits</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 active:scale-95 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-sm text-label-sm uppercase mt-1">Zones</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-lg p-2 h-12 w-16 active:scale-95 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">assignment_late</span>
+<span class="font-label-sm text-label-sm uppercase mt-1">Actions</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 active:scale-95 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm uppercase mt-1">Profile</span>
+</a>
+</nav>
+</main>
+<script>
+        // Simple drag and drop simulation styling for visual feedback
+        const cards = document.querySelectorAll('.kanban-column > div');
+        cards.forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.classList.add('brightness-125', 'rotate-1');
+            });
+            card.addEventListener('mouseup', () => {
+                card.classList.remove('brightness-125', 'rotate-1');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('brightness-125', 'rotate-1');
+            });
+        });
+
+        // Column drag over styling
+        const columns = document.querySelectorAll('.kanban-column');
+        columns.forEach(col => {
+            col.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                col.parentElement.classList.add('bg-surface-variant');
+            });
+            col.addEventListener('dragleave', () => {
+                col.parentElement.classList.remove('bg-surface-variant');
+            });
+        });
+    </script>
+</body></html>

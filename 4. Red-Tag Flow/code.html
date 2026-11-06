@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>5S Red-Tag Flow | Industrial UI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for industrial feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111317;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2C3036;
+            border-radius: 0px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f4632;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+        }
+        .step-active {
+            border-bottom: 4px solid #fabd00;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#001f25",
+                        "secondary-fixed-dim": "#c5c6cc",
+                        "surface-container": "#1e2023",
+                        "tertiary": "#b4f0ff",
+                        "secondary": "#c5c6cc",
+                        "on-secondary-container": "#b6b8be",
+                        "border-gray": "#2C3036",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#fabd00",
+                        "on-background": "#e2e2e6",
+                        "surface-bright": "#37393d",
+                        "surface": "#111317",
+                        "outline": "#9c8f78",
+                        "on-error": "#690005",
+                        "tertiary-container": "#00defd",
+                        "tertiary-fixed-dim": "#00daf8",
+                        "surface-dim": "#111317",
+                        "tertiary-fixed": "#a5eeff",
+                        "primary-fixed-dim": "#fabd00",
+                        "safety-orange": "#FF6D00",
+                        "inverse-primary": "#785900",
+                        "outline-variant": "#4f4632",
+                        "on-primary-fixed-variant": "#5b4300",
+                        "primary": "#ffe4af",
+                        "surface-container-lowest": "#0c0e11",
+                        "inverse-on-surface": "#2f3034",
+                        "text-primary": "#F5F5F5",
+                        "primary-fixed": "#ffdf9e",
+                        "on-tertiary-fixed-variant": "#004e5a",
+                        "on-secondary": "#2e3135",
+                        "on-surface-variant": "#d4c5ab",
+                        "secondary-fixed": "#e1e2e8",
+                        "surface-variant": "#333538",
+                        "on-surface": "#e2e2e6",
+                        "text-secondary": "#9AA0A6",
+                        "surface-container-high": "#282a2d",
+                        "inverse-surface": "#e2e2e6",
+                        "on-primary-fixed": "#261a00",
+                        "on-tertiary": "#00363f",
+                        "on-primary": "#3f2e00",
+                        "on-primary-container": "#6d5100",
+                        "surface-container-highest": "#333538",
+                        "on-error-container": "#ffdad6",
+                        "safety-red": "#FF3B30",
+                        "on-tertiary-container": "#005e6c",
+                        "safety-green": "#00C853",
+                        "primary-container": "#ffc107",
+                        "on-secondary-fixed-variant": "#44474b",
+                        "surface-container-low": "#1a1c1f",
+                        "on-secondary-fixed": "#191c20",
+                        "secondary-container": "#46494e",
+                        "error-container": "#93000a",
+                        "background": "#111317"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "48px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "stack-md": "16px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Barlow Condensed"],
+                        "display-lg": ["Barlow Condensed"],
+                        "headline-lg": ["Barlow Condensed"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Barlow Condensed"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "0.02em", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "0.01em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24 md:pb-0 md:pl-64">
+<!-- Top Navigation -->
+<header class="flex justify-between items-center px-margin-mobile w-full h-14 bg-surface border-b border-border-gray fixed top-0 left-0 right-0 z-40 md:pl-[272px]">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-primary" data-icon="precision_manufacturing">precision_manufacturing</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary-container tracking-wider uppercase">RED-TAG FLOW</h1>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-variant transition-colors" data-icon="help_outline">help_outline</button>
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<!-- Navigation Drawer (Desktop) -->
+<aside class="hidden lg:flex flex-col h-screen fixed left-0 top-0 h-full w-64 border-r border-border-gray bg-surface-container z-50">
+<div class="p-stack-lg border-b border-border-gray">
+<div class="flex items-center gap-stack-md mb-stack-lg">
+<div class="w-12 h-12 bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-3xl" data-icon="person">person</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-primary tracking-tight">OPERATIONS MGR</p>
+<p class="text-[10px] text-text-secondary uppercase">Plant 04 - Zone B</p>
+</div>
+</div>
+<p class="font-headline-md text-headline-md text-primary-container uppercase">5S AUDIT SYSTEM</p>
+</div>
+<nav class="flex-grow py-stack-md">
+<a class="flex items-center gap-stack-md text-secondary hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md uppercase">Dashboard</span>
+</a>
+<a class="flex items-center gap-stack-md bg-primary-container text-on-primary-container border-l-4 border-safety-orange font-bold px-4 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md uppercase">Audit Manager</span>
+</a>
+<a class="flex items-center gap-stack-md text-secondary hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="plumbing">plumbing</span>
+<span class="font-label-md text-label-md uppercase">Corrective Actions</span>
+</a>
+<a class="flex items-center gap-stack-md text-secondary hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-label-md text-label-md uppercase">Site Map</span>
+</a>
+<a class="flex items-center gap-stack-md text-secondary hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-md text-label-md uppercase">Reports</span>
+</a>
+</nav>
+<div class="p-4 border-t border-border-gray">
+<div class="flex items-center justify-between text-secondary">
+<span class="text-[10px] font-bold">SYSTEM STATUS: OPTIMAL</span>
+<div class="w-2 h-2 rounded-full bg-safety-green"></div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-20 px-margin-mobile md:px-margin-desktop max-w-5xl mx-auto pb-32">
+<!-- Step Indicator -->
+<div class="flex mb-stack-lg border-b border-border-gray">
+<div class="flex-1 pb-2 text-center step-active">
+<p class="text-[10px] text-primary uppercase font-bold tracking-widest">Step 01</p>
+<p class="font-label-md text-label-md text-primary uppercase">Identification</p>
+</div>
+<div class="flex-1 pb-2 text-center opacity-40">
+<p class="text-[10px] text-secondary uppercase font-bold tracking-widest">Step 02</p>
+<p class="font-label-md text-label-md text-secondary uppercase">Classification</p>
+</div>
+<div class="flex-1 pb-2 text-center opacity-40">
+<p class="text-[10px] text-secondary uppercase font-bold tracking-widest">Step 03</p>
+<p class="font-label-md text-label-md text-secondary uppercase">Approval</p>
+</div>
+</div>
+<!-- Photo Capture Area -->
+<section class="mb-stack-lg">
+<div class="relative group cursor-pointer border-2 border-dashed border-border-gray bg-surface-container-low aspect-video md:aspect-[21/9] flex flex-col items-center justify-center transition-all hover:border-primary-container overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center grayscale opacity-30" data-alt="A high-contrast industrial photograph of a cluttered metal workstation in a dimly lit factory. The lighting is harsh and dramatic, focusing on discarded tools and debris. The color palette is dominated by dark grays and blacks with slight metallic glints, creating a rugged and authoritative atmosphere consistent with a manufacturing environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBTXIaPBDEN3xA1fq8G77o9eqT2IiH0OAN4vlWAvmxR6XizZJN1iDD3J7dGBt8h15q-sRItiAXdFde5sYsgd-WFbjEOuTog9FIKwld3EBTFECPTNBrPNyp6GXQQcEHWihiZAYGVd40D3Qy2z_tZIvr8YHMSWGUXXlf2Qn2jGTBkHFB4PBBOwFAus2q5Ct6eIWxRmKMdqxehhAQn6WTW45yb4atqbHPgYxpGYkF-HokhVtiYDAlyGtaD3tRvXj4l3bOdDbfCRfITfPTn')"></div>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<span class="material-symbols-outlined text-primary-container text-5xl mb-stack-sm" data-icon="photo_camera">photo_camera</span>
+<p class="font-headline-md text-headline-md text-on-surface uppercase tracking-wide">Capture Red-Tag Item</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Tap to open industrial camera</p>
+</div>
+<!-- Scanning animation effect -->
+<div class="absolute top-0 left-0 w-full h-0.5 bg-primary-container opacity-50 animate-[bounce_3s_infinite]"></div>
+</div>
+</section>
+<!-- Red-Tag Form Section -->
+<div class="bento-grid">
+<!-- Left Column: Primary Fields -->
+<div class="col-span-12 md:col-span-8 flex flex-col gap-stack-md">
+<!-- Description -->
+<div class="bg-surface-container-low p-stack-md border border-border-gray">
+<label class="block font-label-md text-label-md text-primary uppercase mb-2">Item Description</label>
+<textarea class="w-full bg-surface-container-highest border-b-2 border-border-gray text-on-surface p-4 focus:border-primary-container focus:ring-0 transition-all font-body-md placeholder:text-outline-variant" placeholder="Identify the object, part number, and current state..." rows="3"></textarea>
+<div class="flex justify-between mt-2">
+<span class="text-[10px] text-text-secondary uppercase">Character count: 0/500</span>
+<span class="text-[10px] text-safety-orange uppercase">Required field</span>
+</div>
+</div>
+<!-- Secondary Selections -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="bg-surface-container-low p-stack-md border border-border-gray">
+<label class="block font-label-md text-label-md text-primary uppercase mb-2">Primary Reason</label>
+<select class="w-full bg-surface-container-highest border-b-2 border-border-gray text-on-surface h-12 px-4 focus:border-primary-container focus:ring-0 appearance-none uppercase font-label-md">
+<option disabled="" selected="" value="">Select Reason</option>
+<option value="unused">Unused</option>
+<option value="unknown">Unknown</option>
+<option value="misplaced">Misplaced</option>
+<option value="damaged">Damaged</option>
+</select>
+</div>
+<div class="bg-surface-container-low p-stack-md border border-border-gray">
+<label class="block font-label-md text-label-md text-primary uppercase mb-2">Proposed Disposition</label>
+<select class="w-full bg-surface-container-highest border-b-2 border-border-gray text-on-surface h-12 px-4 focus:border-primary-container focus:ring-0 appearance-none uppercase font-label-md">
+<option disabled="" selected="" value="">Select Action</option>
+<option value="relocate">Relocate</option>
+<option value="discard">Discard</option>
+<option value="return">Return</option>
+<option value="needs_review">Needs Review</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Right Column: Metadata & Assignment -->
+<div class="col-span-12 md:col-span-4 flex flex-col gap-stack-md">
+<!-- Tag Details Card -->
+<div class="bg-surface-container border border-border-gray p-stack-md flex flex-col gap-stack-sm">
+<div class="flex justify-between items-center border-b border-border-gray pb-2">
+<span class="font-label-sm text-label-sm text-secondary uppercase">TAG ID</span>
+<span class="font-headline-md text-headline-md text-safety-red">RT-40922</span>
+</div>
+<div class="py-2">
+<p class="text-[10px] text-text-secondary uppercase">Timestamp</p>
+<p class="font-body-md text-on-surface">2023-10-24 | 09:42 AM</p>
+</div>
+<div class="py-2">
+<p class="text-[10px] text-text-secondary uppercase">Location Authority</p>
+<p class="font-body-md text-on-surface">PLANT 04 - SECTION B - LINE 2</p>
+</div>
+</div>
+<!-- Owner Assignment -->
+<div class="bg-surface-container-low p-stack-md border border-border-gray">
+<label class="block font-label-md text-label-md text-primary uppercase mb-2">Owner Assignment</label>
+<div class="flex items-center bg-surface-container-highest border-b-2 border-border-gray px-4">
+<span class="material-symbols-outlined text-outline" data-icon="person_search">person_search</span>
+<input class="flex-1 bg-transparent border-none text-on-surface h-12 focus:ring-0 uppercase font-label-md" placeholder="Search by Badge or Name" type="text"/>
+</div>
+<div class="mt-stack-sm flex flex-wrap gap-2">
+<button class="bg-surface-variant text-[10px] px-2 py-1 uppercase font-bold text-secondary hover:bg-border-gray">+ Recent: J. MILLER</button>
+<button class="bg-surface-variant text-[10px] px-2 py-1 uppercase font-bold text-secondary hover:bg-border-gray">+ Recent: S. CHEN</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Warning Disclaimer -->
+<div class="mt-stack-lg p-stack-md bg-error-container/20 border-l-4 border-safety-red flex gap-stack-md items-start">
+<span class="material-symbols-outlined text-safety-red" data-icon="warning">warning</span>
+<div>
+<p class="font-label-md text-label-md text-safety-red uppercase">Operational Compliance</p>
+<p class="text-sm text-on-error-container/80">Red-tagging items locks them for 48 hours for review. Ensure no critical path operations depend on this equipment before finalizing disposition.</p>
+</div>
+</div>
+</main>
+<!-- Bottom Action Bar / Mobile Nav Pivot -->
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-low md:pl-64 border-t-2 border-border-gray">
+<!-- Action Buttons (Main Transactional Row) -->
+<div class="flex w-full h-20 items-stretch border-b border-border-gray/50">
+<button class="flex-[1] bg-surface-variant text-secondary font-headline-md flex items-center justify-center gap-2 uppercase active:brightness-90 transition-all">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+<span class="hidden sm:inline">Cancel</span>
+</button>
+<button class="flex-[3] bg-primary-container text-on-primary-container font-headline-md flex items-center justify-center gap-2 uppercase active:brightness-90 transition-all">
+<span class="material-symbols-outlined" data-icon="save">save</span>
+<span>Finalize Red-Tag</span>
+</button>
+</div>
+<!-- Mobile Global Navigation -->
+<nav class="flex lg:hidden justify-around items-center w-full bg-surface-container-low pb-safe h-12">
+<div class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="font-label-sm text-label-sm uppercase text-[8px]">Audits</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-label-sm text-label-sm uppercase text-[8px]">Zones</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-lg p-2 h-10 w-16 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined" data-icon="assignment_late" style="font-variation-settings: 'FILL' 1;">assignment_late</span>
+<span class="font-label-sm text-label-sm uppercase text-[8px]">Actions</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 active:scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm uppercase text-[8px]">Profile</span>
+</div>
+</nav>
+</div>
+<script>
+        // Micro-interaction for select focus
+        const inputs = document.querySelectorAll('select, textarea, input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('border-primary-container');
+                input.parentElement.classList.remove('border-border-gray');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('border-primary-container');
+                input.parentElement.classList.add('border-border-gray');
+            });
+        });
+
+        // Simple photo capture simulator
+        const photoArea = document.querySelector('.aspect-video');
+        photoArea.addEventListener('click', () => {
+            const feedback = document.createElement('div');
+            feedback.className = 'fixed inset-0 z-[60] bg-white pointer-events-none opacity-0';
+            document.body.appendChild(feedback);
+            
+            // Flash effect
+            feedback.animate([
+                { opacity: 0.8 },
+                { opacity: 0 }
+            ], { duration: 150 });
+            
+            setTimeout(() => feedback.remove(), 200);
+        });
+    </script>
+</body></html>

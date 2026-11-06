@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>5S Audit Schedule - Plant 04</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#001f25",
+                    "secondary-fixed-dim": "#c5c6cc",
+                    "surface-container": "#1e2023",
+                    "tertiary": "#b4f0ff",
+                    "secondary": "#c5c6cc",
+                    "on-secondary-container": "#b6b8be",
+                    "border-gray": "#2C3036",
+                    "error": "#ffb4ab",
+                    "surface-tint": "#fabd00",
+                    "on-background": "#e2e2e6",
+                    "surface-bright": "#37393d",
+                    "surface": "#111317",
+                    "outline": "#9c8f78",
+                    "on-error": "#690005",
+                    "tertiary-container": "#00defd",
+                    "tertiary-fixed-dim": "#00daf8",
+                    "surface-dim": "#111317",
+                    "tertiary-fixed": "#a5eeff",
+                    "primary-fixed-dim": "#fabd00",
+                    "safety-orange": "#FF6D00",
+                    "inverse-primary": "#785900",
+                    "outline-variant": "#4f4632",
+                    "on-primary-fixed-variant": "#5b4300",
+                    "primary": "#ffe4af",
+                    "surface-container-lowest": "#0c0e11",
+                    "inverse-on-surface": "#2f3034",
+                    "text-primary": "#F5F5F5",
+                    "primary-fixed": "#ffdf9e",
+                    "on-tertiary-fixed-variant": "#004e5a",
+                    "on-secondary": "#2e3135",
+                    "on-surface-variant": "#d4c5ab",
+                    "secondary-fixed": "#e1e2e8",
+                    "surface-variant": "#333538",
+                    "on-surface": "#e2e2e6",
+                    "text-secondary": "#9AA0A6",
+                    "surface-container-high": "#282a2d",
+                    "inverse-surface": "#e2e2e6",
+                    "on-primary-fixed": "#261a00",
+                    "on-tertiary": "#00363f",
+                    "on-primary": "#3f2e00",
+                    "on-primary-container": "#6d5100",
+                    "surface-container-highest": "#333538",
+                    "on-error-container": "#ffdad6",
+                    "safety-red": "#FF3B30",
+                    "on-tertiary-container": "#005e6c",
+                    "safety-green": "#00C853",
+                    "primary-container": "#ffc107",
+                    "on-secondary-fixed-variant": "#44474b",
+                    "surface-container-low": "#1a1c1f",
+                    "on-secondary-fixed": "#191c20",
+                    "secondary-container": "#46494e",
+                    "error-container": "#93000a",
+                    "background": "#111317"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "touch-target-min": "48px",
+                    "stack-sm": "8px",
+                    "margin-mobile": "16px",
+                    "gutter": "16px",
+                    "stack-lg": "24px",
+                    "stack-md": "16px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Barlow Condensed"],
+                    "display-lg": ["Barlow Condensed"],
+                    "headline-lg": ["Barlow Condensed"],
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Barlow Condensed"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "0.02em", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111317; }
+        ::-webkit-scrollbar-thumb { background: #2C3036; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #333538; }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .day-cell {
+            min-height: 120px;
+            border: 1px solid #2C3036;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- Navigation Drawer (Desktop Anchor) -->
+<aside class="hidden lg:flex flex-col h-screen fixed left-0 top-0 h-full w-64 border-r border-border-gray bg-surface-container dark:bg-surface-container-high z-50">
+<div class="p-stack-lg border-b border-border-gray">
+<h1 class="font-headline-md text-headline-md text-primary-container mb-stack-sm tracking-wider">5S AUDIT</h1>
+<div class="flex items-center gap-3 mt-4">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center border border-border-gray overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A rugged, close-up portrait of a factory operations manager wearing a hard hat and safety goggles. The background shows blurred industrial machinery and amber warning lights. Professional photography with high contrast and cool metallic tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSiQE1U2Ddp64EFrgBPdD7P2czz5OblvnlI_mPRO8O0rFj-_OlaBiZj9grszzKeDV474WfilIdsKgDHkIoQ2HD80-6o4Tz268IB5N1gLmCGdxb8Ukaa6z8JhnJgIzYcRK6sqBKUGO0xDeRAs_jiPfSC_gfyhy-DotJFOQSVLqrxluJXg3U7agOpDYlhjPYAoX7rmjliICIzKn8JnrG6l5HxZKJuIfj9awaJ5ZOUeHeWgE-Np-JVCZVlUT1VA0o7hIovo_n-Aazb9OY"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary">OPERATIONS MGR</span>
+<span class="text-[10px] text-secondary-fixed-dim uppercase tracking-tighter">Plant 04 - Zone B</span>
+</div>
+</div>
+</div>
+<nav class="flex-1 py-4 overflow-y-auto">
+<a class="flex items-center gap-3 text-secondary hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container border-l-4 border-safety-orange font-bold px-4 py-3 transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Audit Manager</span>
+</a>
+<a class="flex items-center gap-3 text-secondary hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">plumbing</span>
+<span class="font-label-md text-label-md">Corrective Actions</span>
+</a>
+<a class="flex items-center gap-3 text-secondary hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">map</span>
+<span class="font-label-md text-label-md">Site Map</span>
+</a>
+<a class="flex items-center gap-3 text-secondary hover:text-on-surface px-4 py-3 hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">description</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<div class="p-4 border-t border-border-gray">
+<button class="w-full flex items-center justify-center gap-2 bg-surface-variant text-on-surface font-label-md py-3 rounded hover:brightness-110 transition-all active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+                SYSTEM CONFIG
+            </button>
+</div>
+</aside>
+<!-- Top App Bar (Mobile/Layout Header) -->
+<header class="lg:ml-64 flex justify-between items-center px-margin-mobile lg:px-margin-desktop w-full h-14 bg-surface dark:bg-surface-dim border-b border-border-gray z-40">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">precision_manufacturing</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary-container tracking-wider uppercase">Audit Schedule</span>
+</div>
+<div class="flex items-center gap-2 lg:gap-4">
+<div class="hidden md:flex gap-4 mr-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-safety-red rounded-sm"></div>
+<span class="text-[10px] font-bold text-secondary uppercase">Overdue</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-safety-orange rounded-sm"></div>
+<span class="text-[10px] font-bold text-secondary uppercase">Upcoming</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant p-2 cursor-pointer transition-colors">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant p-2 cursor-pointer transition-colors">account_circle</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="lg:ml-64 p-margin-mobile lg:p-margin-desktop min-h-[calc(100vh-56px)] pb-24 lg:pb-margin-desktop">
+<!-- Controls & Metrics Row -->
+<div class="flex flex-col lg:flex-row gap-6 mb-stack-lg items-end justify-between">
+<div class="w-full lg:w-auto">
+<h2 class="font-headline-md text-headline-md text-primary mb-2">OCTOBER 2023</h2>
+<div class="flex gap-2">
+<button class="h-touch-target-min px-4 bg-surface-container-high border border-border-gray hover:bg-surface-variant active:scale-95 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">chevron_left</span>
+                        PREV
+                    </button>
+<button class="h-touch-target-min px-6 bg-primary-container text-on-primary-container font-bold tracking-widest active:scale-95 transition-all">
+                        TODAY
+                    </button>
+<button class="h-touch-target-min px-4 bg-surface-container-high border border-border-gray hover:bg-surface-variant active:scale-95 transition-all flex items-center gap-2">
+                        NEXT
+                        <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-auto">
+<div class="bg-surface-container p-4 border border-border-gray">
+<p class="text-[10px] font-bold text-secondary uppercase mb-1">Total Audits</p>
+<p class="text-headline-md font-headline-md text-on-surface">42</p>
+</div>
+<div class="bg-surface-container p-4 border-l-4 border-l-safety-red border-y border-r border-border-gray">
+<p class="text-[10px] font-bold text-safety-red uppercase mb-1">Overdue</p>
+<p class="text-headline-md font-headline-md text-safety-red">03</p>
+</div>
+<div class="bg-surface-container p-4 border-l-4 border-l-safety-orange border-y border-r border-border-gray">
+<p class="text-[10px] font-bold text-safety-orange uppercase mb-1">Upcoming</p>
+<p class="text-headline-md font-headline-md text-safety-orange">12</p>
+</div>
+<div class="bg-surface-container p-4 border border-border-gray">
+<p class="text-[10px] font-bold text-secondary uppercase mb-1">Compliance</p>
+<p class="text-headline-md font-headline-md text-safety-green">94%</p>
+</div>
+</div>
+</div>
+<!-- Industrial Calendar View -->
+<div class="bg-surface-container-lowest border border-border-gray overflow-x-auto">
+<div class="min-w-[900px]">
+<!-- Calendar Header Days -->
+<div class="calendar-grid border-b border-border-gray bg-surface-container-high">
+<div class="p-4 text-center font-bold text-[12px] text-secondary uppercase tracking-widest">Sunday</div>
+<div class="p-4 text-center font-bold text-[12px] text-secondary uppercase tracking-widest">Monday</div>
+<div class="p-4 text-center font-bold text-[12px] text-secondary uppercase tracking-widest">Tuesday</div>
+<div class="p-4 text-center font-bold text-[12px] text-secondary uppercase tracking-widest">Wednesday</div>
+<div class="p-4 text-center font-bold text-[12px] text-secondary uppercase tracking-widest">Thursday</div>
+<div class="p-4 text-center font-bold text-[12px] text-secondary uppercase tracking-widest">Friday</div>
+<div class="p-4 text-center font-bold text-[12px] text-secondary uppercase tracking-widest">Saturday</div>
+</div>
+<!-- Calendar Content -->
+<div class="calendar-grid">
+<!-- Week 1: Partial -->
+<div class="day-cell bg-surface-dim opacity-40">
+<div class="p-2 text-right text-[12px]">24</div>
+</div>
+<div class="day-cell bg-surface-dim opacity-40">
+<div class="p-2 text-right text-[12px]">25</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">26</div>
+<div class="px-1 flex flex-col gap-1">
+<div class="bg-surface-variant p-2 text-[10px] border-l-2 border-safety-green font-bold text-on-surface-variant">
+                                ZONE A - COMPLETED
+                            </div>
+</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">27</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">28</div>
+<div class="px-1 flex flex-col gap-1">
+<div class="bg-safety-red/20 p-2 text-[10px] border-l-2 border-safety-red font-bold text-safety-red">
+                                ZONE D - OVERDUE
+                            </div>
+</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">29</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">30</div>
+</div>
+<!-- Week 2: Current Focus -->
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">01</div>
+</div>
+<div class="day-cell bg-surface-variant/20 border-2 border-primary-container z-10">
+<div class="p-2 flex justify-between items-center">
+<span class="bg-primary-container text-on-primary-container px-2 py-0.5 text-[10px] font-bold">TODAY</span>
+<span class="text-[12px] font-bold text-primary">02</span>
+</div>
+<div class="px-1 flex flex-col gap-1">
+<div class="bg-safety-orange/20 p-2 text-[10px] border-l-2 border-safety-orange font-bold text-safety-orange cursor-pointer hover:bg-safety-orange/30 transition-colors">
+                                ZONE B - SHIFT A
+                            </div>
+<div class="bg-surface-container-high p-2 text-[10px] border-l-2 border-border-gray font-bold text-secondary">
+                                MAINT - EQUIP 04
+                            </div>
+</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">03</div>
+<div class="px-1 flex flex-col gap-1">
+<div class="bg-safety-orange/10 p-2 text-[10px] border-l-2 border-safety-orange font-bold text-secondary-fixed-dim">
+                                ZONE C - PLANNED
+                            </div>
+</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">04</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">05</div>
+<div class="px-1 flex flex-col gap-1">
+<div class="bg-safety-red/20 p-2 text-[10px] border-l-2 border-safety-red font-bold text-safety-red">
+                                ZONE G - OVERDUE
+                            </div>
+</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">06</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">07</div>
+</div>
+<!-- Week 3: Typical -->
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">08</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">09</div>
+<div class="px-1 flex flex-col gap-1">
+<div class="bg-safety-orange/10 p-2 text-[10px] border-l-2 border-safety-orange font-bold text-secondary-fixed-dim">
+                                ZONE A - RE-AUDIT
+                            </div>
+</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">10</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">11</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">12</div>
+<div class="px-1 flex flex-col gap-1">
+<div class="bg-safety-orange/10 p-2 text-[10px] border-l-2 border-safety-orange font-bold text-secondary-fixed-dim">
+                                WAREHOUSE - SEC 4
+                            </div>
+</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">13</div>
+</div>
+<div class="day-cell">
+<div class="p-2 text-right text-[12px] font-bold text-secondary">14</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Details Panel (Asymmetric Placement) -->
+<section class="mt-stack-lg grid grid-cols-1 xl:grid-cols-3 gap-stack-lg">
+<div class="xl:col-span-2 bg-surface-container border border-border-gray p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-headline-md text-primary uppercase">Zone Audit Log</h3>
+<button class="bg-surface-variant px-4 py-2 text-[12px] font-bold hover:bg-surface-bright transition-colors border border-border-gray">EXPORT CSV</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-surface-container-low border-l-4 border-safety-red border-y border-r border-border-gray">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-safety-red" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div>
+<p class="font-body-md text-on-surface">Zone D - Assembly Line 02</p>
+<p class="text-[12px] text-secondary">Scheduled: Sept 28, 2023 • Assigned: T. Smith</p>
+</div>
+</div>
+<button class="bg-safety-red text-white px-4 py-2 font-bold text-[12px] rounded hover:brightness-110 active:scale-95 transition-all">RESOLVE NOW</button>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low border-l-4 border-safety-orange border-y border-r border-border-gray">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-safety-orange">schedule</span>
+<div>
+<p class="font-body-md text-on-surface">Zone B - CNC Workshop</p>
+<p class="text-[12px] text-secondary">Scheduled: Oct 02, 2023 • Assigned: J. Doe</p>
+</div>
+</div>
+<button class="border border-safety-orange text-safety-orange px-4 py-2 font-bold text-[12px] rounded hover:bg-safety-orange/10 active:scale-95 transition-all">START AUDIT</button>
+</div>
+</div>
+</div>
+<div class="bg-surface-container border border-border-gray p-6">
+<h3 class="font-headline-md text-headline-md text-primary uppercase mb-6">Factory Status</h3>
+<div class="relative h-64 w-full bg-surface-container-lowest border border-border-gray flex items-center justify-center overflow-hidden">
+<!-- Placeholder for dynamic map/zone visualization -->
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+
+</div>
+<div class="z-10 text-center">
+<span class="material-symbols-outlined text-4xl text-primary mb-2">precision_manufacturing</span>
+<p class="text-[12px] font-bold text-secondary uppercase tracking-widest">Zone B Live Feed</p>
+<div class="mt-4 flex gap-2 justify-center">
+<span class="px-2 py-1 bg-safety-green/20 text-safety-green text-[10px] font-bold border border-safety-green">OPERATIONAL</span>
+<span class="px-2 py-1 bg-surface-variant text-secondary text-[10px] font-bold border border-border-gray">5S SCORE: 92</span>
+</div>
+</div>
+<img class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-30" data-alt="A top-down architectural wireframe of a large manufacturing facility floor plan. High-contrast white lines on a charcoal background. Specific areas are highlighted with safety orange and red overlays to indicate audit status." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBkBMe0lDism0wPVcvsZLrC3rmB50QbkUX7C1FaNNAbzLkbYGMr0mJPeXsPIpIcXI3XawSvKkA1mwf_f5hYddBpTFKfLCsVOWTv1Y8mcl_XGI2QS-_od7Kr8dql0OMpC6i-1dQ0X3-Q4qP9bHN8r7O8f2VJdkDPKKe3FTkqnexL8NTeMVX7bCO6p46M8bf3Btcnjz7YRj30Xomi4wkQcvtcH5FRxr-lvl85ymvA85yKymtpApqIplRy3E3CLcRam95Ov-zr5p8IExA"/>
+</div>
+<div class="mt-6 space-y-3">
+<div class="flex justify-between items-center text-[12px] border-b border-border-gray pb-2">
+<span class="text-secondary">Next Site Inspection</span>
+<span class="font-bold text-primary">04:30 PM Today</span>
+</div>
+<div class="flex justify-between items-center text-[12px] border-b border-border-gray pb-2">
+<span class="text-secondary">Assigned Inspector</span>
+<span class="font-bold text-primary">Chief Officer Miller</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Nav (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full h-touch-target-min bg-surface-container-low border-t-2 border-border-gray flex justify-around items-center z-50 px-2 pb-safe">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-lg p-2 h-10 w-16 transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined text-[20px]">fact_check</span>
+<span class="text-[8px] font-bold uppercase">Audits</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 hover:bg-surface-container-high transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+<span class="text-[8px] font-bold uppercase">Zones</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 hover:bg-surface-container-high transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined text-[20px]">assignment_late</span>
+<span class="text-[8px] font-bold uppercase">Actions</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 hover:bg-surface-container-high transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined text-[20px]">person</span>
+<span class="text-[8px] font-bold uppercase">Profile</span>
+</a>
+</nav>
+<!-- FAB (Contextual) -->
+<button class="fixed bottom-20 right-6 lg:bottom-10 lg:right-10 w-14 h-14 bg-safety-orange text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-90 transition-all z-40 group">
+<span class="material-symbols-outlined text-3xl">add</span>
+<span class="absolute right-16 bg-surface-container-high text-on-surface px-3 py-1 rounded text-[12px] font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity border border-border-gray">NEW AUDIT</span>
+</button>
+<script>
+        // Simple Interaction logic
+        document.querySelectorAll('.day-cell').forEach(cell => {
+            cell.addEventListener('click', function() {
+                if(this.classList.contains('bg-surface-dim')) return;
+                
+                // Reset all
+                document.querySelectorAll('.day-cell').forEach(c => c.classList.remove('bg-surface-container-highest'));
+                // Highlight selected
+                this.classList.add('bg-surface-container-highest');
+            });
+        });
+    </script>
+</body></html>

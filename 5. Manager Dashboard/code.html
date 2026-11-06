@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>5S Audit System - Manager Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for industrial feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111317; }
+        ::-webkit-scrollbar-thumb { background: #2C3036; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #fabd00; }
+        
+        .heatmap-cell:hover {
+            filter: brightness(1.2);
+            outline: 2px solid #fabd00;
+            z-index: 10;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#001f25",
+                    "secondary-fixed-dim": "#c5c6cc",
+                    "surface-container": "#1e2023",
+                    "tertiary": "#b4f0ff",
+                    "secondary": "#c5c6cc",
+                    "on-secondary-container": "#b6b8be",
+                    "border-gray": "#2C3036",
+                    "error": "#ffb4ab",
+                    "surface-tint": "#fabd00",
+                    "on-background": "#e2e2e6",
+                    "surface-bright": "#37393d",
+                    "surface": "#111317",
+                    "outline": "#9c8f78",
+                    "on-error": "#690005",
+                    "tertiary-container": "#00defd",
+                    "tertiary-fixed-dim": "#00daf8",
+                    "surface-dim": "#111317",
+                    "tertiary-fixed": "#a5eeff",
+                    "primary-fixed-dim": "#fabd00",
+                    "safety-orange": "#FF6D00",
+                    "inverse-primary": "#785900",
+                    "outline-variant": "#4f4632",
+                    "on-primary-fixed-variant": "#5b4300",
+                    "primary": "#ffe4af",
+                    "surface-container-lowest": "#0c0e11",
+                    "inverse-on-surface": "#2f3034",
+                    "text-primary": "#F5F5F5",
+                    "primary-fixed": "#ffdf9e",
+                    "on-tertiary-fixed-variant": "#004e5a",
+                    "on-secondary": "#2e3135",
+                    "on-surface-variant": "#d4c5ab",
+                    "secondary-fixed": "#e1e2e8",
+                    "surface-variant": "#333538",
+                    "on-surface": "#e2e2e6",
+                    "text-secondary": "#9AA0A6",
+                    "surface-container-high": "#282a2d",
+                    "inverse-surface": "#e2e2e6",
+                    "on-primary-fixed": "#261a00",
+                    "on-tertiary": "#00363f",
+                    "on-primary": "#3f2e00",
+                    "on-primary-container": "#6d5100",
+                    "surface-container-highest": "#333538",
+                    "on-error-container": "#ffdad6",
+                    "safety-red": "#FF3B30",
+                    "on-tertiary-container": "#005e6c",
+                    "safety-green": "#00C853",
+                    "primary-container": "#ffc107",
+                    "on-secondary-fixed-variant": "#44474b",
+                    "surface-container-low": "#1a1c1f",
+                    "on-secondary-fixed": "#191c20",
+                    "secondary-container": "#46494e",
+                    "error-container": "#93000a",
+                    "background": "#111317"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "touch-target-min": "48px",
+                    "stack-sm": "8px",
+                    "margin-mobile": "16px",
+                    "gutter": "16px",
+                    "stack-lg": "24px",
+                    "stack-md": "16px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Barlow Condensed"],
+                    "display-lg": ["Barlow Condensed"],
+                    "headline-lg": ["Barlow Condensed"],
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Barlow Condensed"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "0.02em", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container overflow-hidden h-screen flex">
+<!-- NavigationDrawer (Shared Component) -->
+<aside class="hidden lg:flex flex-col h-screen fixed left-0 top-0 h-full w-64 border-r border-border-gray bg-surface-container dark:bg-surface-container-high z-50">
+<!-- Header -->
+<div class="p-stack-lg border-b border-border-gray mb-stack-lg">
+<div class="flex items-center gap-stack-sm mb-stack-lg">
+<span class="material-symbols-outlined text-primary-container font-headline-md text-headline-md">precision_manufacturing</span>
+<span class="font-headline-md text-headline-md text-primary-container">5S AUDIT</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-surface-variant rounded-lg flex items-center justify-center border border-border-gray overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a factory operations manager wearing high-visibility safety gear and a hard hat. The background is a clean, technologically advanced manufacturing plant with subtle orange and charcoal equipment. Studio lighting creates a sharp, authoritative yet accessible look in a dark-mode industrial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA675GETCtgIoOehxbHtvAwAa3Mw0E7EzoJMhWbTRxUuW4iBWXdlBtGWoz54YRc02sWaDaJ5pyFzqjtehy_4lNqLttdVD-F-6vhNVpBrRhfL7QBlsR_fQ6PzKWqZAUpLPz1G1BRMVtKwvNP_IINSAGMhuPckSy1wWV7gbOCfp842iiEYxgx5sFLKtrnyfG2vQDpFEOfcSjbrflhGbzMQ47HPrnWmVJ0SRJTzIIgyXqgab60JrT2jg8tJpGiHoKGD-5UZVOwESX-Q_Dk"/>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-primary uppercase">OPERATIONS MGR</h3>
+<p class="text-[10px] text-text-secondary">Plant 04 - Zone B</p>
+<p class="text-[10px] text-safety-orange font-bold uppercase tracking-widest">Shift A</p>
+</div>
+</div>
+</div>
+<!-- Nav Items -->
+<nav class="flex-1 space-y-1">
+<a class="bg-primary-container text-on-primary-container border-l-4 border-safety-orange font-bold px-4 py-3 flex items-center gap-3 group transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-secondary hover:text-on-surface px-4 py-3 flex items-center gap-3 hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">analytics</span>
+<span class="font-label-md text-label-md">Audit Manager</span>
+</a>
+<a class="text-secondary hover:text-on-surface px-4 py-3 flex items-center gap-3 hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">plumbing</span>
+<span class="font-label-md text-label-md">Corrective Actions</span>
+</a>
+<a class="text-secondary hover:text-on-surface px-4 py-3 flex items-center gap-3 hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">map</span>
+<span class="font-label-md text-label-md">Site Map</span>
+</a>
+<a class="text-secondary hover:text-on-surface px-4 py-3 flex items-center gap-3 hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">description</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<!-- Footer -->
+<div class="p-4 border-t border-border-gray">
+<button class="w-full h-touch-target-min border-2 border-border-gray hover:border-primary-container text-secondary hover:text-primary-container transition-all flex items-center justify-center gap-2 rounded-lg">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">SYSTEM LOGOUT</span>
+</button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 lg:ml-64 flex flex-col h-screen overflow-y-auto">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center px-margin-mobile md:px-margin-desktop w-full h-14 bg-surface dark:bg-surface-dim border-b border-border-gray shrink-0 sticky top-0 z-40">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-primary">precision_manufacturing</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-wider uppercase">FACTORY OVERVIEW</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex flex-col items-end">
+<span class="text-[10px] text-text-secondary uppercase">Last Synced</span>
+<span class="text-label-sm font-label-sm text-safety-green">JUST NOW</span>
+</div>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-surface-variant transition-colors text-primary">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-margin-mobile md:p-margin-desktop space-y-gutter flex-1">
+<!-- Summary Stats Section -->
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-gutter">
+<!-- Factory Score Card -->
+<div class="bg-surface-container-low border border-border-gray p-4 flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">leaderboard</span>
+</div>
+<span class="text-label-sm font-label-sm text-text-secondary uppercase tracking-widest">Global Factory Score</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-safety-green">88%</span>
+<span class="text-label-md text-safety-green flex items-center"><span class="material-symbols-outlined text-sm">arrow_upward</span> 2.4%</span>
+</div>
+</div>
+<!-- Zones Below Target -->
+<div class="bg-surface-container-low border border-border-gray p-4 flex flex-col justify-between h-32 relative overflow-hidden group">
+<span class="text-label-sm font-label-sm text-text-secondary uppercase tracking-widest text-safety-red">Zones Below Target</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-safety-red">03</span>
+<span class="text-label-sm text-on-surface-variant">/ 18 TOTAL</span>
+</div>
+<div class="w-full bg-surface-variant h-1 mt-2">
+<div class="bg-safety-red h-1 w-[16%]"></div>
+</div>
+</div>
+<!-- Open Actions -->
+<div class="bg-surface-container-low border border-border-gray p-4 flex flex-col justify-between h-32 relative overflow-hidden group">
+<span class="text-label-sm font-label-sm text-text-secondary uppercase tracking-widest">Open Corrective Actions</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-primary-container">12</span>
+<span class="text-label-sm text-safety-orange font-bold uppercase">Critical</span>
+</div>
+</div>
+<!-- Weekly Audits -->
+<div class="bg-surface-container-low border border-border-gray p-4 flex flex-col justify-between h-32 relative overflow-hidden group">
+<span class="text-label-sm font-label-sm text-text-secondary uppercase tracking-widest">Audits This Week</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface">42</span>
+<span class="text-label-sm text-on-surface-variant">Scheduled: 48</span>
+</div>
+</div>
+</section>
+<!-- Main Interactive Section (Bento Style) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Factory Floor Heatmap (Centerpiece) -->
+<section class="lg:col-span-8 bg-surface-container-low border border-border-gray flex flex-col">
+<div class="p-4 border-b border-border-gray flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-primary uppercase">Live Factory Floor Heatmap</h2>
+<div class="flex gap-2">
+<span class="flex items-center gap-1 text-[10px] uppercase font-bold text-safety-green"><div class="w-2 h-2 bg-safety-green"></div> &gt;90%</span>
+<span class="flex items-center gap-1 text-[10px] uppercase font-bold text-primary-container"><div class="w-2 h-2 bg-primary-container"></div> 80-90%</span>
+<span class="flex items-center gap-1 text-[10px] uppercase font-bold text-safety-red"><div class="w-2 h-2 bg-safety-red"></div> &lt;80%</span>
+</div>
+</div>
+<div class="p-margin-mobile flex-1 min-h-[400px] relative">
+<!-- Heatmap Grid -->
+<div class="grid grid-cols-6 grid-rows-4 gap-2 h-full w-full opacity-90">
+<!-- High performance zones -->
+<div class="heatmap-cell bg-safety-green/30 border-2 border-safety-green p-2 flex flex-col justify-end cursor-pointer transition-all">
+<span class="text-[10px] font-bold">ZONE A-1</span>
+<span class="text-sm font-black">94%</span>
+</div>
+<div class="heatmap-cell bg-safety-green/30 border-2 border-safety-green p-2 flex flex-col justify-end cursor-pointer transition-all col-span-2">
+<span class="text-[10px] font-bold">LOADING DOCK</span>
+<span class="text-sm font-black">91%</span>
+</div>
+<div class="heatmap-cell bg-primary-container/30 border-2 border-primary-container p-2 flex flex-col justify-end cursor-pointer transition-all">
+<span class="text-[10px] font-bold">PAINT</span>
+<span class="text-sm font-black">84%</span>
+</div>
+<div class="heatmap-cell bg-safety-green/30 border-2 border-safety-green p-2 flex flex-col justify-end cursor-pointer transition-all">
+<span class="text-[10px] font-bold">QC-2</span>
+<span class="text-sm font-black">98%</span>
+</div>
+<div class="heatmap-cell bg-safety-green/30 border-2 border-safety-green p-2 flex flex-col justify-end cursor-pointer transition-all">
+<span class="text-[10px] font-bold">ZONE B-1</span>
+<span class="text-sm font-black">92%</span>
+</div>
+<!-- Low performance zone -->
+<div class="heatmap-cell bg-safety-red/30 border-2 border-safety-red p-2 flex flex-col justify-end cursor-pointer transition-all row-span-2">
+<span class="text-[10px] font-bold">ASSEMBLY 4</span>
+<span class="text-sm font-black">74%</span>
+</div>
+<div class="heatmap-cell bg-primary-container/30 border-2 border-primary-container p-2 flex flex-col justify-end cursor-pointer transition-all col-span-3">
+<span class="text-[10px] font-bold">MACHINING BLOCK</span>
+<span class="text-sm font-black">81%</span>
+</div>
+<div class="heatmap-cell bg-safety-green/30 border-2 border-safety-green p-2 flex flex-col justify-end cursor-pointer transition-all col-span-2">
+<span class="text-[10px] font-bold">INVENTORY</span>
+<span class="text-sm font-black">90%</span>
+</div>
+<div class="heatmap-cell bg-safety-green/30 border-2 border-safety-green p-2 flex flex-col justify-end cursor-pointer transition-all col-span-2">
+<span class="text-[10px] font-bold">WELDING</span>
+<span class="text-sm font-black">95%</span>
+</div>
+<div class="heatmap-cell bg-safety-red/30 border-2 border-safety-red p-2 flex flex-col justify-end cursor-pointer transition-all">
+<span class="text-[10px] font-bold">STAGING</span>
+<span class="text-sm font-black">78%</span>
+</div>
+<div class="heatmap-cell bg-primary-container/30 border-2 border-primary-container p-2 flex flex-col justify-end cursor-pointer transition-all">
+<span class="text-[10px] font-bold">QC-1</span>
+<span class="text-sm font-black">88%</span>
+</div>
+<div class="heatmap-cell bg-safety-green/30 border-2 border-safety-green p-2 flex flex-col justify-end cursor-pointer transition-all">
+<span class="text-[10px] font-bold">PACKING</span>
+<span class="text-sm font-black">93%</span>
+</div>
+<div class="heatmap-cell bg-primary-container/30 border-2 border-primary-container p-2 flex flex-col justify-end cursor-pointer transition-all col-span-4">
+<span class="text-[10px] font-bold">MAIN AISLE WAY</span>
+<span class="text-sm font-black">86%</span>
+</div>
+<div class="heatmap-cell bg-safety-red/30 border-2 border-safety-red p-2 flex flex-col justify-end cursor-pointer transition-all col-span-2">
+<span class="text-[10px] font-bold">REWORK STATION</span>
+<span class="text-sm font-black">69%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Sidebar Leaderboard (Right) -->
+<section class="lg:col-span-4 bg-surface-container-low border border-border-gray flex flex-col">
+<div class="p-4 border-b border-border-gray">
+<h2 class="font-headline-md text-headline-md text-primary uppercase">Leaderboard</h2>
+</div>
+<div class="flex border-b border-border-gray">
+<button class="flex-1 py-3 text-label-md uppercase font-bold text-primary border-b-2 border-safety-orange">Zones</button>
+<button class="flex-1 py-3 text-label-md uppercase font-bold text-secondary hover:text-on-surface">Shifts</button>
+</div>
+<div class="p-0 overflow-y-auto max-h-[400px]">
+<div class="divide-y divide-border-gray">
+<!-- Leaderboard Item 1 -->
+<div class="p-4 flex items-center justify-between bg-surface-container-high/50">
+<div class="flex items-center gap-3">
+<span class="text-headline-md text-safety-green font-bold w-6">01</span>
+<div>
+<p class="font-bold text-on-surface uppercase">QC Station 2</p>
+<p class="text-[10px] text-text-secondary">Manager: J. Doe</p>
+</div>
+</div>
+<span class="font-bold text-safety-green text-lg">98.2%</span>
+</div>
+<!-- Leaderboard Item 2 -->
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="text-headline-md text-primary font-bold w-6">02</span>
+<div>
+<p class="font-bold text-on-surface uppercase">Welding Bay 4</p>
+<p class="text-[10px] text-text-secondary">Manager: R. Smith</p>
+</div>
+</div>
+<span class="font-bold text-on-surface text-lg">95.5%</span>
+</div>
+<!-- Leaderboard Item 3 -->
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="text-headline-md text-primary font-bold w-6">03</span>
+<div>
+<p class="font-bold text-on-surface uppercase">Loading Area</p>
+<p class="text-[10px] text-text-secondary">Manager: L. Wong</p>
+</div>
+</div>
+<span class="font-bold text-on-surface text-lg">91.0%</span>
+</div>
+<!-- Leaderboard Item (Bottom) -->
+<div class="p-4 flex items-center justify-between bg-safety-red/10">
+<div class="flex items-center gap-3">
+<span class="text-headline-md text-safety-red font-bold w-6">18</span>
+<div>
+<p class="font-bold text-on-surface uppercase">Rework Station</p>
+<p class="text-[10px] text-safety-red font-bold">ACTION REQ.</p>
+</div>
+</div>
+<span class="font-bold text-safety-red text-lg">69.1%</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- 8-Week Trend Chart Section -->
+<section class="bg-surface-container-low border border-border-gray p-6">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary uppercase">8-Week 5S Performance Trend</h2>
+<p class="text-label-sm text-text-secondary">Composite plant-wide audit scores</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-safety-green"></div>
+<span class="text-[10px] uppercase font-bold">Target (85%)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-primary-container"></div>
+<span class="text-[10px] uppercase font-bold">Actual</span>
+</div>
+</div>
+</div>
+<!-- Mock Trend Chart Area -->
+<div class="h-48 w-full flex items-end gap-2 px-2 relative">
+<!-- Baseline Target Line -->
+<div class="absolute bottom-[65%] left-0 right-0 border-t border-dashed border-safety-green/50 z-0"></div>
+<!-- Chart Bars/Points -->
+<div class="flex-1 h-[60%] bg-surface-variant relative group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface-container border border-border-gray px-2 py-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">W1: 78%</div>
+</div>
+<div class="flex-1 h-[65%] bg-surface-variant relative group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface-container border border-border-gray px-2 py-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">W2: 80%</div>
+</div>
+<div class="flex-1 h-[62%] bg-surface-variant relative group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface-container border border-border-gray px-2 py-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">W3: 79%</div>
+</div>
+<div class="flex-1 h-[75%] bg-primary-container relative group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface-container border border-border-gray px-2 py-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">W4: 88%</div>
+</div>
+<div class="flex-1 h-[72%] bg-primary-container relative group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface-container border border-border-gray px-2 py-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">W5: 86%</div>
+</div>
+<div class="flex-1 h-[70%] bg-primary-container relative group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface-container border border-border-gray px-2 py-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">W6: 85%</div>
+</div>
+<div class="flex-1 h-[80%] bg-primary-container relative group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface-container border border-border-gray px-2 py-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">W7: 91%</div>
+</div>
+<div class="flex-1 h-[78%] bg-primary-container relative group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-surface-container border border-border-gray px-2 py-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">W8: 89%</div>
+</div>
+</div>
+<div class="flex justify-between mt-4 px-2 text-[10px] font-bold text-text-secondary uppercase">
+<span>Week 28</span>
+<span>Week 29</span>
+<span>Week 30</span>
+<span>Week 31</span>
+<span>Week 32</span>
+<span>Week 33</span>
+<span>Week 34</span>
+<span>Week 35 (Current)</span>
+</div>
+</section>
+</div>
+<!-- FAB for Quick Actions -->
+<button class="fixed bottom-margin-mobile right-margin-mobile lg:bottom-margin-desktop lg:right-margin-desktop w-14 h-14 bg-primary-container text-on-primary-container rounded-lg shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-3xl font-bold">add</span>
+</button>
+<!-- BottomNavBar (Shared Component - Mobile Only) -->
+<nav class="lg:hidden flex justify-around items-center w-full bg-surface-container-low pb-safe fixed bottom-0 w-full z-50 h-touch-target-min border-t-2 border-border-gray">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-lg p-2 h-10 w-16 transition-transform duration-100 active:scale-95" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-sm text-label-sm uppercase">Audits</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 transition-transform duration-100 active:scale-95" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-sm text-label-sm uppercase">Zones</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 transition-transform duration-100 active:scale-95" href="#">
+<span class="material-symbols-outlined">assignment_late</span>
+<span class="font-label-sm text-label-sm uppercase">Actions</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary p-2 h-10 w-16 transition-transform duration-100 active:scale-95" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm uppercase">Profile</span>
+</a>
+</nav>
+</main>
+<script>
+        // Simple micro-interaction for heatmap cells
+        document.querySelectorAll('.heatmap-cell').forEach(cell => {
+            cell.addEventListener('click', () => {
+                const zone = cell.querySelector('span:first-child').textContent;
+                const score = cell.querySelector('span:last-child').textContent;
+                console.log(`Navigating to details for ${zone} (Score: ${score})`);
+                // UI feedback
+                cell.style.borderColor = '#ffffff';
+                setTimeout(() => {
+                    cell.style.borderColor = '';
+                }, 300);
+            });
+        });
+
+        // Simulating trend chart value tooltips on touch/hover
+        const bars = document.querySelectorAll('.flex-1.bg-surface-variant, .flex-1.bg-primary-container');
+        bars.forEach(bar => {
+            bar.addEventListener('mouseenter', () => {
+                const tooltip = bar.querySelector('div');
+                if(tooltip) tooltip.classList.remove('opacity-0');
+            });
+            bar.addEventListener('mouseleave', () => {
+                const tooltip = bar.querySelector('div');
+                if(tooltip) tooltip.classList.add('opacity-0');
+            });
+        });
+    </script>
+</body></html>
